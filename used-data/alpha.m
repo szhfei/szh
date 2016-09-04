@@ -1,7 +1,5 @@
-function alpha=alpha(lag,name_200,folder,t1,t2)%计算alpha，t1 t2代替对应时间
+function alpha=alpha(lag,name_200,folder,t1,t2,lu,ls)%计算alpha，t1 t2代替对应时间
 sf=200;
-lu=15;
-ls=20;
 sum_u=zeros(lu*sf+ls*sf-1,1);
 sum_s=zeros(lu*sf+ls*sf-1,1);
 % Hd=lowpass2530;
@@ -22,6 +20,9 @@ for i=t1:t2
     %     surf_ch2=filter(Hd,surf_ch2);
     time=fix(600/ls);
     for k=1:time-2
+        if((k*lu*sf+lag+ls*sf)>length(under_ch2))
+            continue
+        end
         uch{k}=under_ch2((k*lu*sf+1):(k*lu*sf+lu*sf));
         sch{k}=surf_ch2((k*lu*sf+lag+1):(k*lu*sf+lag+ls*sf));
         uch{k}=[uch{k};zeros(ls*sf-1,1)];

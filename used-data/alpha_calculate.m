@@ -13,9 +13,9 @@ l1=length(name_200);
 % end
 % clear name_3
 sf=200;
-lu=4;
-ls=4;
-lag=1028;%时间延迟
+lu=50;
+ls=50;
+lag=0;%时间延迟
 sum_u=zeros(lu*sf+ls*sf-1,1);
 sum_s=zeros(lu*sf+ls*sf-1,1);
 % Hd=lowpass2530;
@@ -40,7 +40,10 @@ for i=(6*7+1+144):(6*19+144)
 %     under_ch2=filter(Hd,under_ch2);
 %     surf_ch2=filter(Hd,surf_ch2);
     time=fix(600/ls);
-    for k=1:time-3
+    for k=1:time-2
+        if((k*lu*sf+lag+ls*sf)>length(under_ch1))
+            continue
+        end
         uch{k}=under_ch1((k*lu*sf+1):(k*lu*sf+lu*sf));
         sch{k}=surf_ch1((k*lu*sf+lag+1):(k*lu*sf+lag+ls*sf));
         uch{k}=[uch{k};zeros(ls*sf-1,1)];

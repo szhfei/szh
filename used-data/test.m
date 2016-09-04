@@ -1,4 +1,4 @@
-%计算alpha，未滤波
+%计算alpha，每600s叠加
 clear all
 
 folder='3#\';

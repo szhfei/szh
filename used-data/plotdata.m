@@ -1,3 +1,4 @@
+%plot data with different total time length
 clear all
 folder='3#\';
 
@@ -13,31 +14,30 @@ l1=length(name_200);
 % clear name_3
 
     lag=0;
-    day1{1}=alpha(lag,name_200,folder,7*6+1,10*6);
-    day1{2}=alpha(lag,name_200,folder,10*6+1,13*6);
-    day1{3}=alpha(lag,name_200,folder,13*6+1,16*6);
-    day1{4}=alpha(lag,name_200,folder,16*6+1,19*6);
-    day1{5}=alpha(lag,name_200,folder,19*6+1,22*6);
-    day4{1}=alpha(lag,name_200,folder,7*6+1+144,10*6+144);
-    day4{2}=alpha(lag,name_200,folder,10*6+1+144,13*6+144);
-    day4{3}=alpha(lag,name_200,folder,13*6+1+144,16*6+144);
-    day4{4}=alpha(lag,name_200,folder,16*6+1+144,19*6+144);
-    day4{5}=alpha(lag,name_200,folder,19*6+1+144,22*6+144);
-    day7{1}=alpha(lag,name_200,folder,7*6+1+288,10*6+288);
-    day7{2}=alpha(lag,name_200,folder,10*6+1+288,13*6+288);
-    day7{3}=alpha(lag,name_200,folder,13*6+1+288,16*6+288);
-    day7{4}=alpha(lag,name_200,folder,16*6+1+288,19*6+288);
-    day7{5}=alpha(lag,name_200,folder,19*6+1+288,22*6+288);
+    sf=200;
+    lu=15;
+    ls=20;
+    day1{1}=alpha(lag,name_200,folder,7*6+1,10*6,lu,ls);
+    day1{2}=alpha(lag,name_200,folder,10*6+1,13*6,lu,ls);
+    day1{3}=alpha(lag,name_200,folder,13*6+1,16*6,lu,ls);
+    day1{4}=alpha(lag,name_200,folder,16*6+1,19*6,lu,ls);
+    day1{5}=alpha(lag,name_200,folder,19*6+1,22*6,lu,ls);
+    day4{1}=alpha(lag,name_200,folder,7*6+1+144,10*6+144,lu,ls);
+    day4{2}=alpha(lag,name_200,folder,10*6+1+144,13*6+144,lu,ls);
+    day4{3}=alpha(lag,name_200,folder,13*6+1+144,16*6+144,lu,ls);
+    day4{4}=alpha(lag,name_200,folder,16*6+1+144,19*6+144,lu,ls);
+    day4{5}=alpha(lag,name_200,folder,19*6+1+144,22*6+144,lu,ls);
+    day7{1}=alpha(lag,name_200,folder,7*6+1+288,10*6+288,lu,ls);
+    day7{2}=alpha(lag,name_200,folder,10*6+1+288,13*6+288,lu,ls);
+    day7{3}=alpha(lag,name_200,folder,13*6+1+288,16*6+288,lu,ls);
+    day7{4}=alpha(lag,name_200,folder,16*6+1+288,19*6+288,lu,ls);
+    day7{5}=alpha(lag,name_200,folder,19*6+1+288,22*6+288,lu,ls);
     
-    sday1=alpha(lag,name_200,folder,7*6+1,22*6);
-    sday4=alpha(lag,name_200,folder,7*6+1+144,22*6+144);
-    sday7=alpha(lag,name_200,folder,7*6+1+288,22*6+288);
-%     sd4=alpha(lag,name_200,folder,0*6+1+144,5*6+144);
+    sday1=alpha(lag,name_200,folder,7*6+1,22*6,lu,ls);
+    sday4=alpha(lag,name_200,folder,7*6+1+144,22*6+144,lu,ls);
+    sday7=alpha(lag,name_200,folder,7*6+1+288,22*6+288,lu,ls);
+%     sd4=alpha(lag,name_200,folder,0*6+1+144,5*6+144,lu,ls);
 
-
-sf=200;
-lu=15;
-ls=20;
 n=0:(lu+ls)*sf-2;
 n=n';
 t=n/sf;
