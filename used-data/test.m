@@ -23,16 +23,16 @@ Hd=lowpass2530;
 %     file=textscan(fid,'%s');
 %     fclose(fid);
 %     iii=1;
-for i=6*7+1+144:6*19+144
+for i=6*0+1+144:6*5+144
 %     if(iii<=9)
 %         if(strcmp(name_200{i},file{1}{iii})==1)
 %             iii=iii+1;
 %             continue
 %         end
 %     end
-    load(['D:\szh\test\used-data\200#\',name_200{i}],'under_ch2');
-    load(['D:\szh\test\used-data\',folder,name_200{i}],'surf_ch2');
-    if(length(under_ch2)~=length(surf_ch2))
+    load(['D:\szh\test\used-data\200#\',name_200{i}],'under_ch1','under_ch2','under_ch3');
+    load(['D:\szh\test\used-data\',folder,name_200{i}],'surf_ch1','surf_ch2','surf_ch3');
+    if(length(under_ch1)~=length(surf_ch1) || length(under_ch2)~=length(surf_ch2) || length(under_ch3)~=length(surf_ch3))
         disp('length error');
         break
     end
@@ -47,8 +47,8 @@ for i=6*7+1+144:6*19+144
 %         sum_s=sum_s+fs{k}.*conj(fu{k});
 %         sum_u=sum_u+fu{k}.*conj(fu{k});
 %     end
-    u=[under_ch2;zeros(119999,1)];
-    s=[surf_ch2;zeros(119999,1)];
+    u=[under_ch1;zeros(119999,1)];
+    s=[surf_ch1;zeros(119999,1)];
     fu=fft(u);
     fs=fft(s);
     sum_s=sum_s+fs.*conj(fu);

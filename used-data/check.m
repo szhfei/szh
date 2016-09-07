@@ -1,8 +1,8 @@
 clear all
-folder='11#\';
+folder='1#\';
 % [name_200,name_3]=list('D:\szh\test\used-data\200#\','D:\szh\test\used-data\3#\');
 % name_200=listmat('D:\szh\test\used-data\200#\');
-name_11=listmat(['D:\szh\test\used-data\',folder]);
+name_1=listmat(['D:\szh\test\used-data\',folder]);
 load('D:\szh\test\used-data\namelist\name_200.mat','name_200');
 % load('D:\szh\test\used-data\namelist\name_3.mat','name_3');
 [filename1,filename2]=listname('D:\szh\test\used-data\','D:\szh\test\used-data\');
@@ -41,7 +41,7 @@ count=0;
 for i=1:48
     load(['D:\szh\test\used-data\',filename2{i}],'D_a');
     for k=1:3
-        load(['D:\szh\test\used-data\',folder,name_11{0+i*3-3+k}],'surf_ch1','surf_ch2','surf_ch3');
+        load(['D:\szh\test\used-data\',folder,name_1{0+i*3-3+k}],'surf_ch1','surf_ch2','surf_ch3');
         a=surf_ch1;b=surf_ch2;c=surf_ch3;
         surf_ch1=D_a(((k-1)*120000+1):(k*120000),1);
         surf_ch2=D_a(((k-1)*120000+1):(k*120000),2);

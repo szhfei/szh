@@ -1,4 +1,4 @@
-[uch1,uch2,uch3,sch1,sch2,sch3]=read('20121001070000.200.t3w','acc3#_III-7022_20121001065959.mat',1);
+[uch1,uch2,uch3,sch1,sch2,sch3]=read('20121004070000.200.t3w','acc2#-7019_20121004070000.mat',1);
 % Hd=lowpass2530;
 % uch1=filter(Hd,under_ch1);
 % uch2=filter(Hd,under_ch2);

@@ -23,7 +23,7 @@ sum_s=zeros(lu*sf+ls*sf-1,1);
 %     file=textscan(fid,'%s');
 %     fclose(fid);
 %     iii=1;
-for i=(6*7+1+144):(6*19+144)
+for i=(6*0+1+144):(6*5+144)
 % for i=(6*7+1+0):(6*19+0)
 %     if(iii<=9)
 %         if(strcmp(name_200{i},file{1}{iii})==1)
@@ -31,9 +31,9 @@ for i=(6*7+1+144):(6*19+144)
 %             continue
 %         end
 %     end
-    load(['D:\szh\test\used-data\200#\',name_200{i}],'under_ch1');
-    load(['D:\szh\test\used-data\',folder,name_200{i}],'surf_ch1');
-    if(length(under_ch1)~=length(surf_ch1))
+    load(['D:\szh\test\used-data\200#\',name_200{i}],'under_ch2');
+    load(['D:\szh\test\used-data\',folder,name_200{i}],'surf_ch2');
+    if(length(under_ch2)~=length(surf_ch2))
         disp('length error');
         break
     end
@@ -41,11 +41,11 @@ for i=(6*7+1+144):(6*19+144)
 %     surf_ch2=filter(Hd,surf_ch2);
     time=fix(600/ls);
     for k=1:time-2
-        if((k*lu*sf+lag+ls*sf)>length(under_ch1))
+        if((k*lu*sf+lag+ls*sf)>length(under_ch2))
             continue
         end
-        uch{k}=under_ch1((k*lu*sf+1):(k*lu*sf+lu*sf));
-        sch{k}=surf_ch1((k*lu*sf+lag+1):(k*lu*sf+lag+ls*sf));
+        uch{k}=under_ch2((k*lu*sf+1):(k*lu*sf+lu*sf));
+        sch{k}=surf_ch2((k*lu*sf+lag+1):(k*lu*sf+lag+ls*sf));
         uch{k}=[uch{k};zeros(ls*sf-1,1)];
         sch{k}=[sch{k};zeros(lu*sf-1,1)];
 %         uch{k}=filter(Hd,uch{k});

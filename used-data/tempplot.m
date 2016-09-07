@@ -3,14 +3,14 @@
 clear all
 folder='3#\';
 
-load('D:\szh\test\used-data\namelist\name_3.mat','name_3');
+load('D:\szh\test\used-data\namelist\name_200.mat','name_200');
 % [name_200,name_3]=list('D:\szh\test\used-data\200#\',['D:\szh\test\used-data\',folder]);
 % l1=length(filename_200);
 % namelength=length(filename_200{1});
 
-for i=(6*7+1+0):(6*10+0)  %10-04 19点-22点
-    load(['D:\szh\test\used-data\200#\',name_3{i}],'under_ch1','under_ch2','under_ch3');
-    load(['D:\szh\test\used-data\',folder,name_3{i}],'surf_ch1','surf_ch2','surf_ch3');
+for i=(6*0+1+144):(6*20+144)  %
+    load(['D:\szh\test\used-data\200#\',name_200{i}],'under_ch1','under_ch2','under_ch3');
+    load(['D:\szh\test\used-data\',folder,name_200{i}],'surf_ch1','surf_ch2','surf_ch3');
 % fid=fopen('problem.txt','r');
 % file=textscan(fid,'%s');
 % fclose(fid);
@@ -78,7 +78,7 @@ for i=(6*7+1+0):(6*10+0)  %10-04 19点-22点
     subplot(2,3,5),plot(t,sch2),axis([0 600 -0.1 0.1]);
     subplot(2,3,6),plot(t,sch3),axis([0 600 -0.1 0.1]);
     
-    disp(name_3{i});
+    disp(name_200{i});
     
     judge=input('y/n');
     if(judge=='y')
@@ -88,7 +88,7 @@ for i=(6*7+1+0):(6*10+0)  %10-04 19点-22点
 %             delete(['D:\szh\test\temp\200#\',name_200]);
 %             delete(['D:\szh\test\temp\',folder,name_3]);
             fid=fopen('error.txt','a+');
-            fprintf(fid,'%s%s\r\n',folder,name_3{i});
+            fprintf(fid,'%s%s\r\n',folder,name_200{i});
             fclose(fid);
             continue
         else
