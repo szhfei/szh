@@ -4,7 +4,7 @@ fname=filename((l-13):(l-4));
 prefix=filename(1:(l-18));
 year=filename((l-17):(l-14));month=fname(1:2);day=fname(3:4);hour=fname(5:6);min=fname(7:8);sec=fname(9:10);
 Sec=str2num(sec);
-if((Sec>2 && Sec<58) || (Sec>=60))
+if((Sec>3 && Sec<57) || (Sec>=60))
     disp('error,too long time lag');
     clear all
     name=0;
@@ -84,7 +84,7 @@ else
             end
         end
     end
-    if(Sec<=2)
+    if(Sec<=3)
         sec='00';
     end
     name=strcat(prefix,year,month,day,hour,min,sec,'.mat');

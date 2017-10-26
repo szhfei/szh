@@ -1,66 +1,116 @@
 %plot data with different total time length
 clear all
-folder='3#\';
 
-% [name_200,name_3]=list('D:\szh\test\used-data\200#\',['D:\szh\test\used-data\',folder]);
+folder='2#\';
 load('D:\szh\test\used-data\namelist\name_200.mat','name_200');
 l1=length(name_200);
-% for i=1:l1
-%     if(strcmp(name_200{i},name_3{i})==0)
-%         disp('name error');
-%         return
-%     end
-% end
-% clear name_3
 
-    lag=0;
-    sf=200;
-    lu=15;
-    ls=20;
-    day1{1}=alpha(lag,name_200,folder,7*6+1,10*6,lu,ls);
-    day1{2}=alpha(lag,name_200,folder,10*6+1,13*6,lu,ls);
-    day1{3}=alpha(lag,name_200,folder,13*6+1,16*6,lu,ls);
-    day1{4}=alpha(lag,name_200,folder,16*6+1,19*6,lu,ls);
-    day1{5}=alpha(lag,name_200,folder,19*6+1,22*6,lu,ls);
-    day4{1}=alpha(lag,name_200,folder,7*6+1+144,10*6+144,lu,ls);
-    day4{2}=alpha(lag,name_200,folder,10*6+1+144,13*6+144,lu,ls);
-    day4{3}=alpha(lag,name_200,folder,13*6+1+144,16*6+144,lu,ls);
-    day4{4}=alpha(lag,name_200,folder,16*6+1+144,19*6+144,lu,ls);
-    day4{5}=alpha(lag,name_200,folder,19*6+1+144,22*6+144,lu,ls);
-    day7{1}=alpha(lag,name_200,folder,7*6+1+288,10*6+288,lu,ls);
-    day7{2}=alpha(lag,name_200,folder,10*6+1+288,13*6+288,lu,ls);
-    day7{3}=alpha(lag,name_200,folder,13*6+1+288,16*6+288,lu,ls);
-    day7{4}=alpha(lag,name_200,folder,16*6+1+288,19*6+288,lu,ls);
-    day7{5}=alpha(lag,name_200,folder,19*6+1+288,22*6+288,lu,ls);
-    
-    sday1=alpha(lag,name_200,folder,7*6+1,22*6,lu,ls);
-    sday4=alpha(lag,name_200,folder,7*6+1+144,22*6+144,lu,ls);
-    sday7=alpha(lag,name_200,folder,7*6+1+288,22*6+288,lu,ls);
-%     sd4=alpha(lag,name_200,folder,0*6+1+144,5*6+144,lu,ls);
+sf=200;
+lu=50;
+ls=50;
+lag=000;%时间延迟
+sum_u=zeros(lu*sf+ls*sf-1,1);
+sum_s=zeros(lu*sf+ls*sf-1,1);
 
 n=0:(lu+ls)*sf-2;
 n=n';
 t=n/sf;
-f=n*sf/(lu*sf+ls*sf);
+f=n*sf/(lu*sf+ls*sf-1);
 for j=1:length(n)
-    if(f(j)>=30)
-        N=j;
+    if(f(j)>=20)
+        N=j-1;
         break
     end
 end
+if(strcmp(folder,'3#\') == 1)
+    alpha_day4=alpha(200*5.31,name_200,folder,6*7+1+144*(4-1),6*19+144*(4-1),lu,ls);
+    alpha_day5=alpha(200*5.355,name_200,folder,6*7+1+144*(5-1),6*19+144*(5-1),lu,ls);
+    alpha_day6=alpha(200*5.415,name_200,folder,6*7+1+144*(6-1),6*19+144*(6-1),lu,ls);
+    alpha_day7=alpha(200*5.465,name_200,folder,6*7+1+144*(7-1),6*19+144*(7-1),lu,ls);
+elseif(strcmp(folder,'2#\') == 1)
+    alpha_day4=alpha(200*-3.605,name_200,folder,6*7+1+144*(4-1),6*19+144*(4-1),lu,ls);
+    alpha_day5=alpha(200*-3.545,name_200,folder,6*7+1+144*(5-1),6*19+144*(5-1),lu,ls);
+    alpha_day6=alpha(200*-3.48,name_200,folder,6*7+1+144*(6-1),6*19+144*(6-1),lu,ls);
+    alpha_day7=alpha(200*-3.42,name_200,folder,6*7+1+144*(7-1),6*19+144*(7-1),lu,ls);
+end
 
-figure(10)
-plot(f(1:N),abs(day1{1}(1:N)),f(1:N),abs(day1{2}(1:N)),f(1:N),abs(day1{3}(1:N)),f(1:N),abs(day1{4}(1:N)),f(1:N),abs(day1{5}(1:N)))
-% plot(f(1:N),abs(day1{1}(1:N)),f(1:N),abs(day1{2}(1:N)),f(1:N),abs(day1{3}(1:N)),f(1:N),abs(day1{4}(1:N)))
+span = 30;
+day4 = smooth(abs(alpha_day4),span);
+day5 = smooth(abs(alpha_day5),span);
+day6 = smooth(abs(alpha_day6),span);
+day7 = smooth(abs(alpha_day7),span);
+% day_all = smooth(abs(alpha_all),span);
+figure(20)
+plot(f,day4,f,day5,f,day6,f,day7,'linewidth',1.3),xlim([0 20]),xlabel('f/Hz','fontsize',18)...
+    ,ylabel('alpha','fontsize',18),set(gca,'fontsize',18),legend('10月4号','10月5号','10月6号','10月7号')
 
-figure(11)
-plot(f(1:N),abs(day4{1}(1:N)),f(1:N),abs(day4{2}(1:N)),f(1:N),abs(day4{3}(1:N)),f(1:N),abs(day4{4}(1:N)),f(1:N),abs(day4{5}(1:N)))
-% plot(f(1:N),abs(day4{1}(1:N)),f(1:N),abs(day4{2}(1:N)),f(1:N),abs(day4{3}(1:N)),f(1:N),abs(day4{4}(1:N)))
 
-figure(12)
-plot(f(1:N),abs(day7{1}(1:N)),f(1:N),abs(day7{2}(1:N)),f(1:N),abs(day7{3}(1:N)),f(1:N),abs(day7{4}(1:N)),f(1:N),abs(day7{5}(1:N)))
-% plot(f(1:N),abs(day7{1}(1:N)),f(1:N),abs(day7{2}(1:N)),f(1:N),abs(day7{3}(1:N)),f(1:N),abs(day7{4}(1:N)))
 
-figure(13)
-plot(f(1:N),abs(sday1(1:N)),f(1:N),abs(sday4(1:N)),f(1:N),abs(sday7(1:N)))
-% plot(f(1:N),abs(sday4(1:N)),f(1:N),abs(sday7(1:N)))
+
+%     sday2=alpha(lag,name_200,folder,6*7+1+144*(7-1),6*19+144*(7-1),50,50);
+% n=0:(100)*sf-2;
+% n=n';
+% t=n/sf;
+% f2=n*sf/(100*sf-1);
+% for j=1:length(n)
+%     if(f2(j)>=20)
+%         N2=j-1;
+%         break
+%     end
+% end
+%     sday4=alpha(lag,name_200,folder,6*7+1+144*(7-1),6*19+144*(7-1),60,60);
+% n=0:(120)*sf-2;
+% n=n';
+% t=n/sf;
+% f4=n*sf/(120*sf-1);
+% for j=1:length(n)
+%     if(f4(j)>=20)
+%         N4=j-1;
+%         break
+%     end
+% end
+%     sday6=alpha(lag,name_200,folder,6*7+1+144*(7-1),6*19+144*(7-1),80,80);
+% n=0:(160)*sf-2;
+% n=n';
+% t=n/sf;
+% f6=n*sf/(160*sf-1);
+% for j=1:length(n)
+%     if(f6(j)>=20)
+%         N6=j-1;
+%         break
+%     end
+% end
+%     sday7=alpha(lag,name_200,folder,6*7+1+144*(7-1),6*19+144*(7-1),100,100);
+%     
+% n=0:(200)*sf-2;
+% n=n';
+% t=n/sf;
+% f7=n*sf/(200*sf-1);
+% for j=1:length(n)
+%     if(f7(j)>=20)
+%         N7=j-1;
+%         break
+%     end
+% end
+
+% figure(10)
+% plot(f(1:N),abs(day4{1}(1:N)),f(1:N),abs(day4{2}(1:N)))
+% plot(f(1:N),abs(day1{1}(1:N)),f(1:N),abs(day1{2}(1:N)),f(1:N),abs(day1{3}(1:N)),f(1:N),abs(day1{4}(1:N)),f(1:N),abs(day1{5}(1:N)))
+% % plot(f(1:N),abs(day1{1}(1:N)),f(1:N),abs(day1{2}(1:N)),f(1:N),abs(day1{3}(1:N)),f(1:N),abs(day1{4}(1:N)))
+% 
+% figure(11)
+% plot(f(1:N),abs(day4{1}(1:N)),f(1:N),abs(day4{2}(1:N)),f(1:N),abs(day4{3}(1:N)),f(1:N),abs(day4{4}(1:N)),f(1:N),abs(day4{5}(1:N)))
+% % plot(f(1:N),abs(day4{1}(1:N)),f(1:N),abs(day4{2}(1:N)),f(1:N),abs(day4{3}(1:N)),f(1:N),abs(day4{4}(1:N)))
+% 
+% figure(12)
+% plot(f(1:N),abs(day7{1}(1:N)),f(1:N),abs(day7{2}(1:N)),f(1:N),abs(day7{3}(1:N)),f(1:N),abs(day7{4}(1:N)),f(1:N),abs(day7{5}(1:N)))
+% % plot(f(1:N),abs(day7{1}(1:N)),f(1:N),abs(day7{2}(1:N)),f(1:N),abs(day7{3}(1:N)),f(1:N),abs(day7{4}(1:N)))
+
+% figure(13)
+% plot(f(1:N),abs(sday1(1:N)),f(1:N),abs(sday4(1:N)),f(1:N),abs(sday7(1:N)))
+% plot(f(1:N),abs(sday6(1:N)),f(1:N),abs(sday7(1:N)))
+% plot(f(1:N),abs(sday2(1:N)),f(1:N),abs(sday3(1:N)),f(1:N),abs(sday4(1:N)),f(1:N),abs(sday6(1:N)),f(1:N),abs(sday7(1:N)))
+% plot(f(1:N),abs(sday2(1:N)),f(1:N),abs(sday4(1:N)),f(1:N),abs(sday6(1:N)),f(1:N),abs(sday7(1:N)))
+% plot(f(1:N),abs(sday2(1:N)))
+
+% plot(f2(1:N2),abs(sday2(1:N2)),f4(1:N4),abs(sday4(1:N4)),f6(1:N6),abs(sday6(1:N6)),f7(1:N7),abs(sday7(1:N7)))

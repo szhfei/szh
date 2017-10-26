@@ -1,15 +1,9 @@
-function alpha=alpha(lag,name_200,folder,t1,t2,lu,ls)%计算alpha，t1 t2代替对应时间
+function [sum_s,sum_u,alpha]=get_s_u(lag,name_200,folder,t1,t2,lu,ls)%返回sum_s,sum_u
 sf=200;
 sum_u=zeros(lu*sf+ls*sf-1,1);
 sum_s=zeros(lu*sf+ls*sf-1,1);
 i = t1;
 while(i <= t2)
-%     if(strcmp(name_200{i},'1004190000.mat')==1 || strcmp(name_200{i},'1004191000.mat')==1 || strcmp(name_200{i},'1004192000.mat')==1)   % 1#\10-04-19:00 data error
-%         continue
-%     end
-%     if(strcmp(name_200{i},'1002110000.mat')==1 || strcmp(name_200{i},'1002111000.mat')==1 || strcmp(name_200{i},'1002112000.mat')==1 || strcmp(name_200{i},'1002113000.mat')==1 || strcmp(name_200{i},'1002114000.mat')==1 || strcmp(name_200{i},'1002115000.mat')==1)
-%         continue
-%     end
     if(i == 649)%10-05-12:00-14:50 cut
         i = 667;
         continue

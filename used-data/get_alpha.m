@@ -1,0 +1,158 @@
+function [sum_s,sum_u,alpha]=get_alpha(lag,name_200,folder,t1,t2,lu,ls,channel)%·µ»Øsum_s,sum_u
+sf=200;
+sum_u=zeros(lu*sf+ls*sf-1,1);
+sum_s=zeros(lu*sf+ls*sf-1,1);
+window_u = tukeywin(lu*sf,0.5);
+window_s = tukeywin(ls*sf,0.5);
+i = t1;
+if(strcmp(channel,'ch1')==1)
+    while(i <= t2)
+        if(i == 649)%10-05-12:00-14:50 cut
+            i = 667;
+            continue
+        end
+        if(strcmp(name_200{i},'1004193000.mat')==1 || strcmp(name_200{i},'1004194000.mat')==1 || strcmp(name_200{i},'1004195000.mat')==1)
+            i = i + 3;
+            continue
+        end
+        if(strcmp(name_200{i},'1005103000.mat')==1 || strcmp(name_200{i},'1005104000.mat')==1 || strcmp(name_200{i},'1005105000.mat')==1)
+            i = i + 3;
+            continue
+        end
+        if(strcmp(folder,'3#\') == 1)
+            if(strcmp(name_200{i},'1006200000.mat')==1 || strcmp(name_200{i},'1006201000.mat')==1 || strcmp(name_200{i},'1006202000.mat')==1)
+                i = i + 3;
+                continue
+            end
+        elseif(strcmp(folder,'2#\') == 1)
+            if(strcmp(name_200{i},'1006200000.mat')==1 || strcmp(name_200{i},'1006201000.mat')==1 || strcmp(name_200{i},'1006202000.mat')==1)
+                i = i + 3;
+                continue
+            end
+        end
+        load(['D:\szh\test\used-data\200#\',name_200{i}],'under_ch1','under_ch2','under_ch3');
+        load(['D:\szh\test\used-data\',folder,name_200{i}],'surf_ch1','surf_ch2','surf_ch3');
+        if(length(under_ch1)~=length(surf_ch1) || length(under_ch2)~=length(surf_ch2) || length(under_ch3)~=length(surf_ch3))
+            disp('length error');
+            break
+        end
+        time=fix(600/ls);
+        for k=1:time-2
+            if((k*lu*sf+lag+ls*sf)>120000)
+                continue
+            end
+            uch{k}=under_ch1((k*lu*sf+1):(k*lu*sf+lu*sf));
+            sch{k}=surf_ch1((k*lu*sf+lag+1):(k*lu*sf+lag+ls*sf));
+            uch{k} = uch{k} .* window_u;
+            sch{k} = sch{k} .* window_s;
+            uch{k}=[uch{k};zeros(ls*sf-1,1)];
+            sch{k}=[sch{k};zeros(lu*sf-1,1)];
+            fu{k}=fft(uch{k});
+            fs{k}=fft(sch{k});
+            sum_s=sum_s+fs{k}.*conj(fu{k});
+            sum_u=sum_u+fu{k}.*conj(fu{k});
+        end
+        i = i + 1;
+    end
+elseif(strcmp(channel,'ch2') == 1)
+    while(i <= t2)
+        if(i == 649)%10-05-12:00-14:50 cut
+            i = 667;
+            continue
+        end
+        if(strcmp(name_200{i},'1004193000.mat')==1 || strcmp(name_200{i},'1004194000.mat')==1 || strcmp(name_200{i},'1004195000.mat')==1)
+            i = i + 3;
+            continue
+        end
+        if(strcmp(name_200{i},'1005103000.mat')==1 || strcmp(name_200{i},'1005104000.mat')==1 || strcmp(name_200{i},'1005105000.mat')==1)
+            i = i + 3;
+            continue
+        end
+        if(strcmp(folder,'3#\') == 1)
+            if(strcmp(name_200{i},'1006200000.mat')==1 || strcmp(name_200{i},'1006201000.mat')==1 || strcmp(name_200{i},'1006202000.mat')==1)
+                i = i + 3;
+                continue
+            end
+        elseif(strcmp(folder,'2#\') == 1)
+            if(strcmp(name_200{i},'1006200000.mat')==1 || strcmp(name_200{i},'1006201000.mat')==1 || strcmp(name_200{i},'1006202000.mat')==1)
+                i = i + 3;
+                continue
+            end
+        end
+        load(['D:\szh\test\used-data\200#\',name_200{i}],'under_ch1','under_ch2','under_ch3');
+        load(['D:\szh\test\used-data\',folder,name_200{i}],'surf_ch1','surf_ch2','surf_ch3');
+        if(length(under_ch1)~=length(surf_ch1) || length(under_ch2)~=length(surf_ch2) || length(under_ch3)~=length(surf_ch3))
+            disp('length error');
+            break
+        end
+        time=fix(600/ls);
+        for k=1:time-2
+            if((k*lu*sf+lag+ls*sf)>120000)
+                continue
+            end
+            uch{k}=under_ch2((k*lu*sf+1):(k*lu*sf+lu*sf));
+            sch{k}=surf_ch2((k*lu*sf+lag+1):(k*lu*sf+lag+ls*sf));
+            uch{k} = uch{k} .* window_u;
+            sch{k} = sch{k} .* window_s;
+            uch{k}=[uch{k};zeros(ls*sf-1,1)];
+            sch{k}=[sch{k};zeros(lu*sf-1,1)];
+            fu{k}=fft(uch{k});
+            fs{k}=fft(sch{k});
+            sum_s=sum_s+fs{k}.*conj(fu{k});
+            sum_u=sum_u+fu{k}.*conj(fu{k});
+        end
+        i = i + 1;
+    end
+elseif(strcmp(channel,'ch3') == 1)
+    while(i <= t2)
+        if(i == 649)%10-05-12:00-14:50 cut
+            i = 667;
+            continue
+        end
+        if(strcmp(name_200{i},'1004193000.mat')==1 || strcmp(name_200{i},'1004194000.mat')==1 || strcmp(name_200{i},'1004195000.mat')==1)
+            i = i + 3;
+            continue
+        end
+        if(strcmp(name_200{i},'1005103000.mat')==1 || strcmp(name_200{i},'1005104000.mat')==1 || strcmp(name_200{i},'1005105000.mat')==1)
+            i = i + 3;
+            continue
+        end
+        if(strcmp(folder,'3#\') == 1)
+            if(strcmp(name_200{i},'1006200000.mat')==1 || strcmp(name_200{i},'1006201000.mat')==1 || strcmp(name_200{i},'1006202000.mat')==1)
+                i = i + 3;
+                continue
+            end
+        elseif(strcmp(folder,'2#\') == 1)
+            if(strcmp(name_200{i},'1006200000.mat')==1 || strcmp(name_200{i},'1006201000.mat')==1 || strcmp(name_200{i},'1006202000.mat')==1)
+                i = i + 3;
+                continue
+            end
+        end
+        load(['D:\szh\test\used-data\200#\',name_200{i}],'under_ch1','under_ch2','under_ch3');
+        load(['D:\szh\test\used-data\',folder,name_200{i}],'surf_ch1','surf_ch2','surf_ch3');
+        if(length(under_ch1)~=length(surf_ch1) || length(under_ch2)~=length(surf_ch2) || length(under_ch3)~=length(surf_ch3))
+            disp('length error');
+            break
+        end
+        time=fix(600/ls);
+        for k=1:time-2
+            if((k*lu*sf+lag+ls*sf)>120000)
+                continue
+            end
+            uch{k}=under_ch3((k*lu*sf+1):(k*lu*sf+lu*sf));
+            sch{k}=surf_ch3((k*lu*sf+lag+1):(k*lu*sf+lag+ls*sf));
+            uch{k} = uch{k} .* window_u;
+            sch{k} = sch{k} .* window_s;
+            uch{k}=[uch{k};zeros(ls*sf-1,1)];
+            sch{k}=[sch{k};zeros(lu*sf-1,1)];
+            fu{k}=fft(uch{k});
+            fs{k}=fft(sch{k});
+            sum_s=sum_s+fs{k}.*conj(fu{k});
+            sum_u=sum_u+fu{k}.*conj(fu{k});
+        end
+        i = i + 1;
+    end
+end
+alpha=sum_s./sum_u;
+
+end
