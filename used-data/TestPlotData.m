@@ -71,7 +71,7 @@ Alpha_ch2 = ifft(alpha_ch2);
 [~,~,alpha_ch3] = get_alpha(lag,name_200,folder,6*7+1+144*(4-1),6*19+0+144*(4-1),lu,ls,'ch3');
 Alpha_ch3 = ifft(alpha_ch3);
 
-date = 6*12+1+144*(4-1);
+date = 6*7+1+144*(4-1);
 load(['D:\szh\test\used-data\200#\',name_200{date}],'under_ch1','under_ch2','under_ch3');
 load(['D:\szh\test\used-data\',folder,name_200{date}],'surf_ch1','surf_ch2','surf_ch3');
 
