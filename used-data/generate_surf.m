@@ -220,7 +220,8 @@
 %%
 %反复迭代测试人造数据
 clear all
-surf_folder = '200s直线传递函数\';
+% surf_folder = '200s直线传递函数\';
+surf_folder = '15s梯形传递函数\';
 
 sf=200;
 lu=100;
@@ -263,24 +264,26 @@ f=n*sf/l;
 %传递函数截断平滑修正后迭代
 load(['D:\szh\test\used-data\200#constantly\200#10-0',num2str(day),'\uch1.mat'],'uch1');
 load(['D:\szh\test\used-data\test\',surf_folder,'sch1.mat'],'sch1');
-Alpha_final = cut_smooth_alpha(Alpha_ch1,3000,30);
+cut = 4000;
+span = 30;
+Alpha_final = cut_smooth_alpha(Alpha_ch1,cut,span);
 temp = myconv(Alpha_final,uch1);
 sch_left = sch1 - temp(1:length(uch1));
 s_left{1} = sch_left(120000*6*7+1:120000*6*7+120000);
 z = iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
-Alpha_left_ch1{1} = cut_smooth_alpha(ifft(z),3000,30);
+Alpha_left_ch1{1} = cut_smooth_alpha(ifft(z),cut,span);
 alpha_left_ch1{1} = fft(Alpha_left_ch1{1});
 
 f_final = [0:length(Alpha_final)-1]' / length(Alpha_final) * 200;
 figure(101)
 plot(f_final,abs(alpha_left_ch1{1}))
 
-for i = 2:2
+for i = 2:20
     temp = myconv(Alpha_left_ch1{i-1},uch1);
     sch_left = sch_left - temp(1:length(uch1));
     s_left{i} = sch_left(120000*6*7+1:120000*6*7+120000);
     z = iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
-    Alpha_left_ch1{i} = cut_smooth_alpha(ifft(z),3000,30);
+    Alpha_left_ch1{i} = cut_smooth_alpha(ifft(z),cut,span);
     alpha_left_ch1{i} = fft(Alpha_left_ch1{i});
 end
 
