@@ -218,74 +218,74 @@
 
 
 %%
-%反复迭代测试人造数据
-clear all
-% surf_folder = '200s直线传递函数\';
-surf_folder = '15s梯形传递函数\';
-
-sf=200;
-lu=100;
-ls=100;
-lag=000;%时间延迟
-day = 4;
-t1 = 6*7+1+144*(4-1);
-t2 = 6*19+0+144*(4-1);
-
-alpha_ch1=cal_alpha(lag,surf_folder,day,t1,t2,lu,ls,'ch1');
-Alpha_ch1=ifft(alpha_ch1);
-
-l = (lu+ls)*sf-1;
-n=0:l-1;
-n=n';
-t=n/sf;
-f=n*sf/l;
-% figure(100)
-% plot(f,abs(alpha_ch1))
-
-% %直接计算传递函数并分离迭代
+% %反复迭代测试人造数据
+% clear all
+% % surf_folder = '200s直线传递函数\';
+% surf_folder = '15s梯形传递函数\';
+% 
+% sf=200;
+% lu=100;
+% ls=100;
+% lag=000;%时间延迟
+% day = 4;
+% t1 = 6*7+1+144*(4-1);
+% t2 = 6*19+0+144*(4-1);
+% 
+% alpha_ch1=cal_alpha(lag,surf_folder,day,t1,t2,lu,ls,'ch1');
+% Alpha_ch1=ifft(alpha_ch1);
+% 
+% l = (lu+ls)*sf-1;
+% n=0:l-1;
+% n=n';
+% t=n/sf;
+% f=n*sf/l;
+% % figure(100)
+% % plot(f,abs(alpha_ch1))
+% 
+% % %直接计算传递函数并分离迭代
+% % load(['D:\szh\test\used-data\200#constantly\200#10-0',num2str(day),'\uch1.mat'],'uch1');
+% % load(['D:\szh\test\used-data\test\',surf_folder,'sch1.mat'],'sch1');
+% % temp = myconv(Alpha_ch1,uch1);
+% % sch_left = sch1 - temp(1:length(uch1));
+% % s_left{1} = sch_left(120000*6*7+1:120000*6*7+120000);
+% % alpha_left_ch1{1}=iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+% % 
+% % figure(101)
+% % plot(f,abs(alpha_left_ch1{1}))
+% % 
+% % for i = 2:10
+% %     Alpha_left_ch1{i-1} = ifft(alpha_left_ch1{i-1});
+% %     temp = myconv(Alpha_left_ch1{i-1},uch1);
+% %     sch_left = sch_left - temp(1:length(uch1));
+% %     s_left{i} = sch_left(120000*6*7+1:120000*6*7+120000);
+% %     alpha_left_ch1{i}=iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+% % end
+% 
+% %传递函数截断平滑修正后迭代
 % load(['D:\szh\test\used-data\200#constantly\200#10-0',num2str(day),'\uch1.mat'],'uch1');
 % load(['D:\szh\test\used-data\test\',surf_folder,'sch1.mat'],'sch1');
-% temp = myconv(Alpha_ch1,uch1);
+% cut = 4000;
+% span = 30;
+% Alpha_final = cut_smooth_alpha(Alpha_ch1,cut,span);
+% temp = myconv(Alpha_final,uch1);
 % sch_left = sch1 - temp(1:length(uch1));
 % s_left{1} = sch_left(120000*6*7+1:120000*6*7+120000);
-% alpha_left_ch1{1}=iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+% z = iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+% Alpha_left_ch1{1} = cut_smooth_alpha(ifft(z),cut,span);
+% alpha_left_ch1{1} = fft(Alpha_left_ch1{1});
 % 
+% f_final = [0:length(Alpha_final)-1]' / length(Alpha_final) * 200;
 % figure(101)
-% plot(f,abs(alpha_left_ch1{1}))
+% plot(f_final,abs(alpha_left_ch1{1}))
 % 
-% for i = 2:10
-%     Alpha_left_ch1{i-1} = ifft(alpha_left_ch1{i-1});
+% for i = 2:20
 %     temp = myconv(Alpha_left_ch1{i-1},uch1);
 %     sch_left = sch_left - temp(1:length(uch1));
 %     s_left{i} = sch_left(120000*6*7+1:120000*6*7+120000);
-%     alpha_left_ch1{i}=iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+%     z = iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+%     Alpha_left_ch1{i} = cut_smooth_alpha(ifft(z),cut,span);
+%     alpha_left_ch1{i} = fft(Alpha_left_ch1{i});
 % end
-
-%传递函数截断平滑修正后迭代
-load(['D:\szh\test\used-data\200#constantly\200#10-0',num2str(day),'\uch1.mat'],'uch1');
-load(['D:\szh\test\used-data\test\',surf_folder,'sch1.mat'],'sch1');
-cut = 4000;
-span = 30;
-Alpha_final = cut_smooth_alpha(Alpha_ch1,cut,span);
-temp = myconv(Alpha_final,uch1);
-sch_left = sch1 - temp(1:length(uch1));
-s_left{1} = sch_left(120000*6*7+1:120000*6*7+120000);
-z = iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
-Alpha_left_ch1{1} = cut_smooth_alpha(ifft(z),cut,span);
-alpha_left_ch1{1} = fft(Alpha_left_ch1{1});
-
-f_final = [0:length(Alpha_final)-1]' / length(Alpha_final) * 200;
-figure(101)
-plot(f_final,abs(alpha_left_ch1{1}))
-
-for i = 2:20
-    temp = myconv(Alpha_left_ch1{i-1},uch1);
-    sch_left = sch_left - temp(1:length(uch1));
-    s_left{i} = sch_left(120000*6*7+1:120000*6*7+120000);
-    z = iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
-    Alpha_left_ch1{i} = cut_smooth_alpha(ifft(z),cut,span);
-    alpha_left_ch1{i} = fft(Alpha_left_ch1{i});
-end
 
 %%
 % %反复迭代测试实际数据
@@ -311,19 +311,281 @@ end
 % figure(1)
 % plot(f,abs(alpha_ch1)),xlim([0 15])
 % 
+% % %没有时间对准，直接时域卷积迭代
+% % load(['D:\szh\test\used-data\200#constantly\200#10-0',num2str(day),'\uch1.mat'],'uch1');
+% % load(['D:\szh\test\used-data\test\',surf_folder,'sch1.mat'],'sch1');
+% % temp = myconv(Alpha_ch1,uch1);
+% % sch_left = sch1 - temp(1:length(uch1));
+% % s_left{1} = sch_left(120000*6*7+1:120000*6*7+120000);
+% % alpha_left_ch1{1}=iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+% % 
+% % figure(101)
+% % plot(f,abs(alpha_left_ch1{1})),xlim([0 15])
+% % 
+% % for i = 2:5
+% %     Alpha_left_ch1{i-1} = ifft(alpha_left_ch1{i-1});
+% %     temp = myconv(Alpha_left_ch1{i-1},uch1);
+% %     sch_left = sch_left - temp(1:length(uch1));
+% %     s_left{i} = sch_left(120000*6*7+1:120000*6*7+120000);
+% %     alpha_left_ch1{i}=iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+% % end
 % 
+% %没有时间对准，传递函数截断平滑修正后直接卷积迭代
 % load(['D:\szh\test\used-data\200#constantly\200#10-0',num2str(day),'\uch1.mat'],'uch1');
 % load(['D:\szh\test\used-data\test\',surf_folder,'sch1.mat'],'sch1');
-% temp = myconv(Alpha_ch1,uch1);
+% cut = 4000;
+% span = 1;
+% Alpha_final = cut_smooth_alpha(Alpha_ch1,cut,span);
+% temp = myconv(Alpha_final,uch1);
 % sch_left = sch1 - temp(1:length(uch1));
-% alpha_left_ch1{1}=iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+% s_left{1} = sch_left(120000*6*7+1:120000*6*7+120000);
+% z = iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+% Alpha_left_ch1{1} = ifft(z);%cut_smooth_alpha(ifft(z),cut,span);
+% alpha_left_ch1{1} = fft(Alpha_left_ch1{1});
 % 
-% figure(101)
-% plot(f,abs(alpha_left_ch1{1})),xlim([0 15])
+% f_final = [0:length(Alpha_final)-1]' / length(Alpha_final) * 200;
+% % figure(101)
+% % plot(f_final,abs(alpha_left_ch1{1}))
+% 
+% for i = 2:5
+%     temp = myconv(Alpha_left_ch1{i-1},uch1);
+%     sch_left = sch_left - temp(1:length(uch1));
+%     s_left{i} = sch_left(120000*6*7+1:120000*6*7+120000);
+%     z = iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+%     Alpha_left_ch1{i} = ifft(z);%cut_smooth_alpha(ifft(z),cut,span);
+%     alpha_left_ch1{i} = fft(Alpha_left_ch1{i});
+%     i
+% end
+% 
+% alpha_final = fft(Alpha_final);
+% figure(100)
+% plot(f_final,abs(alpha_final)),xlim([0 15])
+% for i = 1:5
+% figure(100+i)
+% plot(f_final,abs(alpha_left_ch1{i})),xlim([0 15])
+% end
+% Hd = bandpass2_6;
+% for i = 1:5
+% figure(200+i)
+% plot(filter(Hd,s_left{i}))
+% end
+
+%%
+% 3#10-04 07-19数据测试
+clear all
+folder = '3#10-04-07-19\';
+
+sf=200;
+lu=100;
+ls=100;
+lag=000;%时间延迟
+day = 4;
+t1 = 6*7+1+144*(4-1);
+t2 = 6*19+0+144*(4-1);
+
+load(['D:\szh\test\used-data\test\',folder,'sch1.mat'],'sch1');
+load(['D:\szh\test\used-data\test\',folder,'uch1.mat'],'uch1');
+
+alpha_ch1=test_iter_alpha(uch1,sch1,day,t1,t2,lu,ls,'ch1');
+Alpha_ch1=ifft(alpha_ch1);
+
+l = (lu+ls)*sf-1;
+n=0:l-1;
+n=n';
+t=n/sf;
+f=n*sf/l;
+figure(1)
+plot(f,abs(alpha_ch1)),xlim([0 15])
+
+
+% %直接时域卷积迭代
+% 
+% istart = 120000*2+1;
+% iend = istart + 120000-1;
+% 
+% temp = myconv(ifftshift(Alpha_ch1),uch1);
+% sch_left = sch1 - temp(1+(l-1)/2:length(uch1)+(l-1)/2);
+% s_u{1} = temp(istart+(l-1)/2:iend+(l-1)/2);
+% u = uch1(istart:iend);
+% s = sch1(istart:iend);
+% s_left{1} = sch_left(istart:iend);%0700-0710
+% alpha_left_ch1{1}=test_iter_alpha(uch1,sch_left,day,t1,t2,lu,ls,'ch1');
 % 
 % for i = 2:5
 %     Alpha_left_ch1{i-1} = ifft(alpha_left_ch1{i-1});
+%     temp = myconv(ifftshift(Alpha_left_ch1{i-1}),uch1);
+%     sch_left = sch_left - temp(1+(l-1)/2:length(uch1)+(l-1)/2);
+%     s_u{i} = temp(istart+(l-1)/2:iend+(l-1)/2);
+%     s_left{i} = sch_left(istart:iend);
+%     alpha_left_ch1{i}=test_iter_alpha(uch1,sch_left,day,t1,t2,lu,ls,'ch1');
+%     i
+% end
+% for i = 1:5
+% figure(100+i)
+% plot(f,abs(alpha_left_ch1{i})),xlim([0 15])
+% end
+% Hd = bandpass2_6;
+% % Hd = lowpass1015;
+% for i = 1:5
+% figure(200+i)
+% plot(filter(Hd,s_left{i})),ylim([-.04 .04])
+% end
+% 
+% time = [0:120000-1]'/200;
+% for i = 1:5
+% figure(300+i)
+% subplot(4,1,1),plot(time,filter(Hd,u)),ylim([-0.03 0.03]);
+% subplot(4,1,2),plot(time,filter(Hd,s_u{i})),ylim([-0.03 0.03]);
+% subplot(4,1,3),plot(time,filter(Hd,s)),ylim([-0.03 0.03]);
+% subplot(4,1,4),plot(time,filter(Hd,s_left{i})),ylim([-0.03 0.03]);
+% handle_2 = get(gcf,'children');
+% axes(handle_2(4));title('地铁原始记录');
+% axes(handle_2(3));title('地面地铁成分');
+% axes(handle_2(2));title('地面原始记录');
+% axes(handle_2(1));title('分离剩下的地面其他成分');
+% end
+
+
+% %截断平滑修正后时域卷积迭代
+% cut = 3999;
+% Alpha_cut(1:(cut+1)/2,1) = Alpha_ch1(1:(cut+1)/2);
+% Alpha_cut((cut+1)/2+1:cut,1) = Alpha_ch1(end-(cut-1)/2+1:end);
+% temp = myconv(ifftshift(Alpha_cut),uch1);
+% sch_left = sch1 - temp(1+(cut-1)/2:length(uch1)+(cut-1)/2);
+% s_left{1} = sch_left(1:120000);%0700-0710
+% alpha_left_ch1{1}=test_iter_alpha(uch1,sch_left,day,t1,t2,lu,ls,'ch1');
+% 
+% f_cut = [0:cut-1]'/cut*200;
+% for i = 2:5
+%     Alpha_left_ch1{i-1} = ifft(alpha_left_ch1{i-1});
+%     temp = myconv(ifftshift(Alpha_left_ch1{i-1}),uch1);
+%     sch_left = sch_left - temp(1+(l-1)/2:length(uch1)+(l-1)/2);
+%     s_left{i} = sch_left(1:120000);
+%     alpha_left_ch1{i}=test_iter_alpha(uch1,sch_left,day,t1,t2,lu,ls,'ch1');
+%     i
+% end
+% for i = 1:5
+% figure(100+i)
+% plot(f,abs(alpha_left_ch1{i})),xlim([0 15])
+% end
+% Hd = bandpass2_6;
+% for i = 1:5
+% figure(200+i)
+% plot(filter(Hd,s_left{i})),ylim([-.04 .04])
+% end
+
+%频域相减迭代
+count = 5;
+istart = 120000*(2+6*0)+1+20000;
+iend = istart + 120000-1;
+
+sch_left = myfreq(uch1,sch1,ifftshift(Alpha_ch1));
+u = uch1(istart:iend);
+s = sch1(istart:iend);
+s_left{1} = sch_left(istart:iend);%0700-0710
+alpha_left_ch1{1}=test_iter_alpha(uch1,sch_left,day,t1,t2,lu,ls,'ch1');
+
+for i = 2:count
+    Alpha_left_ch1{i-1} = ifft(alpha_left_ch1{i-1});
+    sch_left = myfreq(uch1,sch_left,ifftshift(Alpha_left_ch1{i-1}));
+    s_left{i} = sch_left(istart:iend);
+    alpha_left_ch1{i}=test_iter_alpha(uch1,sch_left,day,t1,t2,lu,ls,'ch1');
+    i
+end
+% for i = 1:count
+% figure(100+i)
+% plot(f,abs(alpha_left_ch1{i})),xlim([0 15]),ylim([0 .7])
+% end
+Hd = bandpass2_6;
+% Hd = lowpass1015;
+% for i = 1:count
+% figure(200+i)
+% plot(filter(Hd,s_left{i})),ylim([-.04 .04])
+% end
+
+time = [0:120000-1]'/200;
+for i = 1:count
+figure(300+i)
+subplot(3,1,1),plot(time,filter(Hd,u)),ylim([-0.03 0.03]);
+% subplot(4,1,2),plot(time,filter(Hd,s_u{i})),ylim([-0.03 0.03]);
+subplot(3,1,2),plot(time,filter(Hd,s)),ylim([-0.03 0.03]);
+subplot(3,1,3),plot(time,filter(Hd,s_left{i})),ylim([-0.03 0.03]);
+handle_2 = get(gcf,'children');
+axes(handle_2(3));title('地铁原始记录');
+% axes(handle_2(3));title('地面地铁成分');
+axes(handle_2(2));title('地面原始记录');
+axes(handle_2(1));title('分离剩下的地面其他成分');
+end
+
+test{1} = alpha_ch1;
+for i = 1:count
+test{i+1} = test{i} + alpha_left_ch1{i};
+Atest{i} = ifft(test{i});
+sch_other{i} = myfreq(uch1,sch1,ifftshift(Atest{i}));
+res{i} = sch_other{i}(istart:iend);
+end
+figure(2)
+plot(f,abs(test{2})),xlim([0 15])
+
+figure(400)
+subplot(3,1,1),plot(time,filter(Hd,u)),ylim([-0.03 0.03]);
+% subplot(4,1,2),plot(time,filter(Hd,s_u{i})),ylim([-0.03 0.03]);
+subplot(3,1,2),plot(time,filter(Hd,s)),ylim([-0.03 0.03]);
+subplot(3,1,3),plot(time,filter(Hd,res{2})),ylim([-0.03 0.03]);
+handle_2 = get(gcf,'children');
+axes(handle_2(3));title('地铁原始记录');
+% axes(handle_2(3));title('地面地铁成分');
+axes(handle_2(2));title('地面原始记录');
+axes(handle_2(1));title('分离剩下的地面其他成分');
+
+figure(1000)
+subplot(4,1,1),plot(time,filter(Hd,u)),ylim([-0.03 0.03]);
+subplot(4,1,2),plot(time,filter(Hd,s)),ylim([-0.03 0.03]);
+subplot(4,1,3),plot(time,filter(Hd,s-res{2})),ylim([-0.03 0.03]);
+subplot(4,1,4),plot(time,filter(Hd,res{2})),ylim([-0.03 0.03]);
+handle_2 = get(gcf,'children');
+axes(handle_2(4));title('地铁原始记录');
+axes(handle_2(3));title('地面原始记录');
+axes(handle_2(2));title('最终分离出的地面地铁成分');
+axes(handle_2(1));title('分离剩下的地面其他成分');
+
+
+% %没有时间对准，传递函数截断平滑修正后直接卷积迭代
+% load(['D:\szh\test\used-data\200#constantly\200#10-0',num2str(day),'\uch1.mat'],'uch1');
+% load(['D:\szh\test\used-data\test\',surf_folder,'sch1.mat'],'sch1');
+% cut = 4000;
+% span = 1;
+% Alpha_final = cut_smooth_alpha(Alpha_ch1,cut,span);
+% temp = myconv(Alpha_final,uch1);
+% sch_left = sch1 - temp(1:length(uch1));
+% s_left{1} = sch_left(120000*6*7+1:120000*6*7+120000);
+% z = iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+% Alpha_left_ch1{1} = ifft(z);%cut_smooth_alpha(ifft(z),cut,span);
+% alpha_left_ch1{1} = fft(Alpha_left_ch1{1});
+% 
+% f_final = [0:length(Alpha_final)-1]' / length(Alpha_final) * 200;
+% % figure(101)
+% % plot(f_final,abs(alpha_left_ch1{1}))
+% 
+% for i = 2:5
 %     temp = myconv(Alpha_left_ch1{i-1},uch1);
 %     sch_left = sch_left - temp(1:length(uch1));
-%     alpha_left_ch1{i}=iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+%     s_left{i} = sch_left(120000*6*7+1:120000*6*7+120000);
+%     z = iter_alpha(lag,sch_left,day,t1,t2,lu,ls,'ch1');
+%     Alpha_left_ch1{i} = ifft(z);%cut_smooth_alpha(ifft(z),cut,span);
+%     alpha_left_ch1{i} = fft(Alpha_left_ch1{i});
+%     i
+% end
+% 
+% alpha_final = fft(Alpha_final);
+% figure(100)
+% plot(f_final,abs(alpha_final)),xlim([0 15])
+% for i = 1:5
+% figure(100+i)
+% plot(f_final,abs(alpha_left_ch1{i})),xlim([0 15])
+% end
+% Hd = bandpass2_6;
+% for i = 1:5
+% figure(200+i)
+% plot(filter(Hd,s_left{i}))
 % end

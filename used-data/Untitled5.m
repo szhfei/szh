@@ -313,3 +313,11 @@
 % plot(f,abs(alpha_ch1),fk,abs(fft(sss)))
 % figure(13)
 % plot(f,abs(alpha_ch1),fk,abs(fft(sss))),xlim([0 15])
+
+%Éú³É07:00-19:00ÐÅºÅ
+folder = '3#10-04-07-19\';
+lag = 1062;
+uch1 = uch1(120000*6*7+1:120000*6*19);
+sch1 = sch1(lag+120000*6*7+1:120000*6*19+lag);
+save(['D:\szh\test\used-data\test\',folder,'sch1.mat'],'sch1');
+save(['D:\szh\test\used-data\test\',folder,'uch1.mat'],'uch1');
