@@ -1,7 +1,7 @@
-%计算alpha，未滤波
+%两地面台站
 clear all
 
-folder='3#\';
+% folder='11#\';
 % [name_200,name_3]=list('D:\szh\test\used-data\200#\',['D:\szh\test\used-data\',folder]);
 load('D:\szh\test\used-data\namelist\name_200.mat','name_200');
 l1=length(name_200);
@@ -13,17 +13,17 @@ l1=length(name_200);
 % end
 % clear name_3
 sf=200;
-lu=100;
-ls=100;
-lag=000;%时间延迟
+lu=50;
+ls=50;
+lag=0;%时间延迟
 sum_u=zeros(lu*sf+ls*sf-1,1);
 sum_s=zeros(lu*sf+ls*sf-1,1);
 % Hd=lowpass2530;
-
-window_u = tukeywin(lu*sf,0.5);
-window_s = tukeywin(ls*sf,0.5);
-
-for i=(6*0+1+144*(4-1)):(6*6+144*(4-1))
+%     fid=fopen('problem.txt','r');
+%     file=textscan(fid,'%s');
+%     fclose(fid);
+%     iii=1;
+for i=(6*7+1+144*(4-1)):(6*19+144*(4-1))
 % for i=(6*7+1+0):(6*19+0)
 %     if(iii<=9)
 %         if(strcmp(name_200{i},file{1}{iii})==1)
@@ -31,15 +31,14 @@ for i=(6*0+1+144*(4-1)):(6*6+144*(4-1))
 %             continue
 %         end
 %     end
-    if(strcmp(name_200{i},'1005103000.mat')==1 || strcmp(name_200{i},'1005104000.mat')==1 || strcmp(name_200{i},'1005105000.mat')==1)
-        continue
-    end
-    load(['D:\szh\test\used-data\200#\',name_200{i}],'under_ch1','under_ch2','under_ch3');
-    load(['D:\szh\test\used-data\',folder,name_200{i}],'surf_ch1','surf_ch2','surf_ch3');
-    if(length(under_ch1)~=length(surf_ch1) || length(under_ch2)~=length(surf_ch2) || length(under_ch3)~=length(surf_ch3))
-        disp('length error');
-        break
-    end
+    load(['D:\szh\test\used-data\3#\',name_200{i}],'surf_ch1','surf_ch2','surf_ch3');
+    a = surf_ch1;
+    load(['D:\szh\test\used-data\2#\',name_200{i}],'surf_ch1','surf_ch2','surf_ch3');
+    b = surf_ch1;
+%     if(length(under_ch1)~=length(surf_ch1) || length(under_ch2)~=length(surf_ch2) || length(under_ch3)~=length(surf_ch3))
+%         disp('length error');
+%         break
+%     end
 %     under_ch2=filter(Hd,under_ch2);
 %     surf_ch2=filter(Hd,surf_ch2);
     time=fix(600/ls);
@@ -47,12 +46,8 @@ for i=(6*0+1+144*(4-1)):(6*6+144*(4-1))
         if((k*lu*sf+lag+ls*sf)>120000)
             continue
         end
-        uch{k}=under_ch1((k*lu*sf+1):(k*lu*sf+lu*sf));
-        sch{k}=surf_ch1((k*lu*sf+lag+1):(k*lu*sf+lag+ls*sf));
-
-        uch{k} = uch{k} .* window_u;
-        sch{k} = sch{k} .* window_s;
-        
+        uch{k}=a((k*lu*sf+1):(k*lu*sf+lu*sf));
+        sch{k}=b((k*lu*sf+lag+1):(k*lu*sf+lag+ls*sf));
         uch{k}=[uch{k};zeros(ls*sf-1,1)];
         sch{k}=[sch{k};zeros(lu*sf-1,1)];
 %         uch{k}=filter(Hd,uch{k});
@@ -76,8 +71,8 @@ n=n';
 t=n/sf;
 f=n*sf/(lu*sf+ls*sf-1);
 for j=1:length(n)
-    if(f(j)>=20)
-        N=j-1;
+    if(f(j)>=30)
+        N=j;
         break
     end
 end
@@ -87,8 +82,6 @@ figure(2)
 plot(t,Alpha)
 figure(3)
 plot(f(1:N),abs(alpha(1:N)))
-% figure(4)
-% plot(t,ifft(alpha*(lu*sf+ls*sf-1)))
 
 % AlphaCut=Alpha(1:(ls*sf-lu*sf));
 % alphaCut=fft(AlphaCut);
