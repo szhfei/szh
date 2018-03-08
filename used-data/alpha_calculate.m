@@ -13,17 +13,17 @@ l1=length(name_200);
 % end
 % clear name_3
 sf=200;
-lu=100;
-ls=100;
-lag=000;%时间延迟
+lu=20;
+ls=20;
+lag=1065;%时间延迟
 sum_u=zeros(lu*sf+ls*sf-1,1);
 sum_s=zeros(lu*sf+ls*sf-1,1);
 % Hd=lowpass2530;
 
-window_u = tukeywin(lu*sf,0.5);
-window_s = tukeywin(ls*sf,0.5);
+window_u = tukeywin(lu*sf,0.2);
+window_s = tukeywin(ls*sf,0.2);
 
-for i=(6*0+1+144*(4-1)):(6*6+144*(4-1))
+for i=(6*7+1+144*(4-1)):(6*19+144*(4-1))
 % for i=(6*7+1+0):(6*19+0)
 %     if(iii<=9)
 %         if(strcmp(name_200{i},file{1}{iii})==1)
@@ -47,8 +47,8 @@ for i=(6*0+1+144*(4-1)):(6*6+144*(4-1))
         if((k*lu*sf+lag+ls*sf)>120000)
             continue
         end
-        uch{k}=under_ch1((k*lu*sf+1):(k*lu*sf+lu*sf));
-        sch{k}=surf_ch1((k*lu*sf+lag+1):(k*lu*sf+lag+ls*sf));
+        uch{k}=under_ch2((k*lu*sf+1):(k*lu*sf+lu*sf));
+        sch{k}=surf_ch2((k*lu*sf+lag+1):(k*lu*sf+lag+ls*sf));
 
         uch{k} = uch{k} .* window_u;
         sch{k} = sch{k} .* window_s;

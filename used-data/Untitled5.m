@@ -314,10 +314,86 @@
 % figure(13)
 % plot(f,abs(alpha_ch1),fk,abs(fft(sss))),xlim([0 15])
 
-%生成07:00-19:00信号
-folder = '3#10-04-07-19\';
-lag = 1062;
-uch1 = uch1(120000*6*7+1:120000*6*19);
-sch1 = sch1(lag+120000*6*7+1:120000*6*19+lag);
-save(['D:\szh\test\used-data\test\',folder,'sch1.mat'],'sch1');
-save(['D:\szh\test\used-data\test\',folder,'uch1.mat'],'uch1');
+% %生成07:00-19:00信号
+% % folder = '3#10-04-07-19\';
+% % lag = 1062;
+% folder = '2#10-04-07-19\';
+% lag = 200*-3.605;
+% uch1 = uch1(120000*6*7+1:120000*6*19);
+% sch1 = sch1(lag+120000*6*7+1:120000*6*19+lag);
+% save(['D:\szh\test\used-data\test\',folder,'sch1.mat'],'sch1');
+% save(['D:\szh\test\used-data\test\',folder,'uch1.mat'],'uch1');
+
+%%
+% %test wangbo
+% clear all
+% folder = '15s梯形传递函数2\';
+% 
+% load(['D:\szh\test\used-data\test\',folder,'Alpha_test.mat'],'Alpha_test');
+% l = 120000;
+% 
+% load('D:\szh\test\used-data\200#constantly\200#10-04\uch1.mat');
+% sch1 = conv(Alpha_test,uch1);
+% clear uch1
+% sch1 = sch1(1:end-length(Alpha_test)+1);
+% noise_1 = zeros(l*6*24,1);
+% for i = 1:6*24
+%     noise_1((i-1)*l+1:i*l) = wgn(120000,1,-32);
+% end
+% sch1 = sch1+noise_1;
+% % save(['D:\szh\test\used-data\test\',folder,'noise_1.mat'],'noise_1');
+% clear noise_1
+% save(['D:\szh\test\used-data\test\',folder,'sch1.mat'],'sch1');
+% clear sch1
+% 
+% 
+% load('D:\szh\test\used-data\200#constantly\200#10-04\uch2.mat');
+% sch2 = conv(Alpha_test,uch2);
+% clear uch2
+% sch2 = sch2(1:end-length(Alpha_test)+1);
+% noise_2 = zeros(l*6*24,1);
+% for i = 1:6*24
+%     noise_2((i-1)*l+1:i*l) = wgn(120000,1,-32);
+% end
+% sch2 = sch2+noise_2;
+% clear noise_2
+% save(['D:\szh\test\used-data\test\',folder,'sch2.mat'],'sch2');
+% clear sch2
+% 
+% 
+% load('D:\szh\test\used-data\200#constantly\200#10-04\uch3.mat');
+% sch3 = conv(Alpha_test,uch3);
+% clear uch3
+% sch3 = sch3(1:end-length(Alpha_test)+1);
+% noise_3 = zeros(l*6*24,1);
+% for i = 1:6*24
+%     noise_3((i-1)*l+1:i*l) = wgn(120000,1,-32);
+% end
+% sch3 = sch3+noise_3;
+% clear noise_3
+% save(['D:\szh\test\used-data\test\',folder,'sch3.mat'],'sch3');
+% clear sch3
+
+%%
+t1 = 6*12 + 5 + 144*(4-1);
+% load('D:\szh\test\used-data\namelist\name_200.mat');
+% load(['D:\szh\test\used-data\200#\',name_200{t1}]);
+% A_200=zeros(120000,3);
+% A_200(:,1)=under_ch1;
+% A_200(:,2)=under_ch2;
+% A_200(:,3)=under_ch3;
+% save(['F:\A_200\A200_1240.mat'],'A_200');
+
+% folder = '10s梯形传递函数 简单相位1\';
+folder = '10s双峰传递函数 简单相位2\';
+load(['D:\szh\test\used-data\test\',folder,'sch1.mat'],'sch1');
+load(['D:\szh\test\used-data\test\',folder,'sch2.mat'],'sch2');
+load(['D:\szh\test\used-data\test\',folder,'sch3.mat'],'sch3');
+XAD=zeros(360000,1);
+tt1 = t1 - 144*(4-1);
+l = 120000;
+x1 = (tt1-1)*l;
+XAD(:,1)=sch1(x1+1:x1+l*3);
+XAD(:,2)=sch2(x1+1:x1+l*3);
+XAD(:,3)=sch3(x1+1:x1+l*3);
+save(['F:\A04\A04_1200.mat'],'XAD');

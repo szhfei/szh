@@ -8,8 +8,8 @@ t2 = t2 - 144*(day-1) -6*7;
 x1 = (t1-1)*l;
 x2 = t2*l;
 time = fix((x2-x1)/(200*ls));
-window_u = tukeywin(200*lu,0.5);
-window_s = tukeywin(200*ls,0.5);
+window_u = tukeywin(200*lu,0.2);
+window_s = tukeywin(200*ls,0.2);
 
 if(channel == 'ch1')
     uch1 = uch;

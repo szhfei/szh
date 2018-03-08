@@ -2,8 +2,8 @@ function [sum_s,sum_u,alpha]=get_alpha(lag,name_200,folder,t1,t2,lu,ls,channel)%
 sf=200;
 sum_u=zeros(lu*sf+ls*sf-1,1);
 sum_s=zeros(lu*sf+ls*sf-1,1);
-window_u = tukeywin(lu*sf,0.5);
-window_s = tukeywin(ls*sf,0.5);
+window_u = tukeywin(lu*sf,0.2);
+window_s = tukeywin(ls*sf,0.2);
 i = t1;
 if(strcmp(channel,'ch1')==1)
     while(i <= t2)

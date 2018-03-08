@@ -10,7 +10,7 @@ load('D:\szh\test\used-data\namelist\name_200.mat','name_200');
 % namelength=length(filename_200{1});
 
 win = tukeywin(120000,0.5);
-for i=(6*7+1+144*(4-1)):(6*23+144*(4-1))  %10-02-19
+for i=(6*0+4+144*(4-1)):(6*23+144*(4-1))  %10-02-19
     load(['D:\szh\test\used-data\200#\',name_200{i}],'under_ch1','under_ch2','under_ch3');
     load(['D:\szh\test\used-data\',folder,name_200{i}],'surf_ch1','surf_ch2','surf_ch3');
 % fid=fopen('problem.txt','r');

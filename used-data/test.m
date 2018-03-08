@@ -13,8 +13,8 @@ sum_u=zeros(lu*sf+ls*sf-1,1);
 sum_s=zeros(lu*sf+ls*sf-1,1);
 
 
-window_u = tukeywin(lu*sf,0.5);
-window_s = tukeywin(ls*sf,0.5);
+window_u = tukeywin(lu*sf,0.2);
+window_s = tukeywin(ls*sf,0.2);
 
 count = 0;
 for i=(6*7+1+144*(4-1)):(6*19+144*(4-1))

@@ -1,13 +1,13 @@
 %plot data with different total time length
 clear all
 
-folder='2#\';
+folder='3#\';
 load('D:\szh\test\used-data\namelist\name_200.mat','name_200');
 l1=length(name_200);
 
 sf=200;
-lu=50;
-ls=50;
+lu=20;
+ls=20;
 lag=000;% ±º‰—”≥Ÿ
 sum_u=zeros(lu*sf+ls*sf-1,1);
 sum_s=zeros(lu*sf+ls*sf-1,1);
