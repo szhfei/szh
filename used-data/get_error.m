@@ -77,11 +77,12 @@ x1 = (t1-1)*l;
 x2 = t2*l;
 time = fix((x2-x1)/(200*ls));
 
-window_u = tukeywin(200*lu,0.5);
-window_s = tukeywin(200*ls,0.5);
+window_u = tukeywin(200*lu,0.2);
+window_s = tukeywin(200*ls,0.2);
 count = 0;
 if(channel == 'ch1')
-    load(['D:\szh\test\used-data\200#constantly\200#10-0',num2str(day),'\uch1.mat'],'uch1');
+%     load(['D:\szh\test\used-data\200#constantly\200#10-0',num2str(day),'\uch1.mat'],'uch1');
+    load('D:\szh\test\used-data\test_11.mat');
     load(['D:\szh\test\used-data\test\',surf_folder,'sch1.mat'],'sch1');
     for k=1:time-2
         count = count + 1;
@@ -139,4 +140,13 @@ elseif(channel == 'ch3')
     end
 end
 alpha=sum_s./sum_u;
+
+c=1;
+f=[0:length(alpha)-1]'/length(alpha)*sf;
+while(f(c)<80)
+    c=c+1;
+end
+for i=c:length(alpha)+2-c
+    alpha(i)=0;
+end
 end

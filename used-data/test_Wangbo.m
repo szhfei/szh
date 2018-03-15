@@ -82,12 +82,12 @@
 
 
 %%
-%test Wangbo's method
+%test Wangbo's method, 先滤波再分段
 clear all
 
 
-% surf_folder = '10s双峰传递函数 简单相位2\';
-surf_folder = '10s梯形传递函数 简单相位1\';
+surf_folder = '10s双峰传递函数 简单相位5\';
+% surf_folder = '10s梯形传递函数 简单相位1\';
 load(['D:\szh\test\used-data\test\',surf_folder,'Alpha_test.mat'],'Alpha_test');
 alpha_test = fft(Alpha_test);
 lA = length(Alpha_test);
@@ -96,17 +96,21 @@ nA = nA';
 tA = nA / 200;
 fA = nA * 200 / lA;
 
-
-load(['D:\szh\test\used-data\200#constantly\200#10-04\uch1.mat'],'uch1');
+load('D:\szh\test\used-data\test_11.mat');
+% load(['D:\szh\test\used-data\200#constantly\200#10-04\uch1.mat'],'uch1');
 load(['D:\szh\test\used-data\test\',surf_folder,'sch1.mat'],'sch1');
 ll = 120000;
-t1 = 6 * 12 + 5;
+t1 = 6 * 7 + 5;
 t2 = 6 * 12 + 5;
 x1 = (t1-1)*ll;
 x2 = t2*ll;
-lag = 400;
+lag = 000;
 u = uch1(x1+1:x2);
 s = sch1(x1+1+lag:x2+lag);
+
+% Hd = highpass0p5;
+% u = myfilter(Hd,u);
+% s = myfilter(Hd,s);
 
 
 fs=200;
@@ -147,12 +151,101 @@ for j = 1:l
     for k=1:time-2
         du = u_filtered(k*dl+1:k*dl+dl);
         ds = s_filtered(k*dl+1:k*dl+dl);
-        u_rms(k) = rms(du);
-        s_rms(k) = rms(ds);
+%         u_rms(k) = rms(du);
+%         s_rms(k) = rms(ds);
+        u_rms(k) = sqrt(sum(du .* du)/dl);
+        s_rms(k) = sqrt(sum(ds .* ds)/dl);
     end
     alpha_wangbo(j) = sum(u_rms .* s_rms) / sum(u_rms .* u_rms);
     j
 end
 figure(1)
-plot(fc,alpha_wangbo,fA,abs(alpha_test)),xlim([.1 50])
+plot(fc,alpha_wangbo,fA,abs(alpha_test)),xlim([.1 50]),ylim([0 3])
+
+
+
+%%
+%test Wangbo's method, 先分段再滤波
+clear all
+
+
+surf_folder = '10s双峰传递函数 简单相位5\';
+% surf_folder = '10s梯形传递函数 简单相位1\';
+load(['D:\szh\test\used-data\test\',surf_folder,'Alpha_test.mat'],'Alpha_test');
+alpha_test = fft(Alpha_test);
+lA = length(Alpha_test);
+nA = 0:lA-1;
+nA = nA';
+tA = nA / 200;
+fA = nA * 200 / lA;
+
+load('D:\szh\test\used-data\test_11.mat');
+% load(['D:\szh\test\used-data\200#constantly\200#10-04\uch1.mat'],'uch1');
+load(['D:\szh\test\used-data\test\',surf_folder,'sch1.mat'],'sch1');
+ll = 120000;
+t1 = 6 * 7 + 5;
+t2 = 6 * 12 + 5;
+x1 = (t1-1)*ll;
+x2 = t2*ll;
+lag = 100;
+u = uch1(x1+1:x2);
+s = sch1(x1+1+lag:x2+lag);
+
+% Hd = highpass0p5;
+% u = myfilter(Hd,u);
+% s = myfilter(Hd,s);
+
+
+fs=200;
+dt = 4;
+dl = dt * fs;
+nfft = x2-x1;%2^nextpow2(n);
+fc = [0.2:0.2:80]';
+l = length(fc);
+alpha_wangbo = zeros(l,1);
+
+% u_spectrum = fft(u,nfft);
+% s_spectrum = fft(s,nfft);
+
+
+for j = 1:l
+    fu = fc(j) * 2^(1/6);
+    fl = fc(j) / 2^(1/6);
+    nu = fix(fu * dl / fs + 1);
+    nl = round(fl * dl / fs + 1);
+    if(fu>=100)
+        break
+    end
+                
+    time=fix(nfft/dl);
+    u_rms = zeros(time-2,1);
+    s_rms = zeros(time-2,1);
+    for k=1:time-2
+        du = u(k*dl+1:k*dl+dl);
+        ds = s(k*dl+1:k*dl+dl);
+        
+        du_spectrum = fft(du .* tukeywin(dl,0.2),dl);
+        ds_spectrum = fft(ds .* tukeywin(dl,0.2),dl);
+        
+        fdu_filtered = zeros(dl,1);
+        fds_filtered = zeros(dl,1);
+        fdu_filtered(nl:nu) = du_spectrum(nl:nu);
+        fdu_filtered(dl+2-nu:dl+2-nl) = du_spectrum(dl+2-nu:dl+2-nl);
+        fds_filtered(nl:nu) = ds_spectrum(nl:nu);
+        fds_filtered(dl+2-nu:dl+2-nl) = ds_spectrum(dl+2-nu:dl+2-nl);
+        du_filtered = real(ifft(fdu_filtered));
+        ds_filtered = real(ifft(fds_filtered));
+        
+        
+        
+%         u_rms(k) = rms(du_filtered);
+%         s_rms(k) = rms(ds_filtered);
+        u_rms(k) = sqrt(sum(du_filtered .* du_filtered)/dl);
+        s_rms(k) = sqrt(sum(ds_filtered .* ds_filtered)/dl);
+    end
+    alpha_wangbo(j) = sum(u_rms .* s_rms) / sum(u_rms .* u_rms);
+    j
+end
+figure(1)
+plot(fc,alpha_wangbo,fA,abs(alpha_test)),xlim([.1 50]),ylim([0 3])
 

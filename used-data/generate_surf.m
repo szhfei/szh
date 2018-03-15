@@ -43,12 +43,14 @@
 %利用噪声，生成连续地表信号
 clear all
 % folder = '15s梯形传递函数0-50Hz\';
-folder = '10s梯形传递函数 简单相位1\';
+% folder = '10s梯形传递函数 简单相位4\';
+folder = '10s双峰传递函数 简单相位4\';
 
 load(['D:\szh\test\used-data\test\',folder,'Alpha_test.mat'],'Alpha_test');
 l = 120000;
 
-load('D:\szh\test\used-data\200#constantly\200#10-04\uch1.mat');
+% load('D:\szh\test\used-data\200#constantly\200#10-04\uch1.mat');
+load('D:\szh\test\used-data\test_11.mat');
 sch1 = conv(Alpha_test,uch1);
 clear uch1
 sch1 = sch1(1:end-length(Alpha_test)+1);
@@ -56,163 +58,165 @@ noise_1 = zeros(l*6*24,1);
 for i = 1:6*24
     noise_1((i-1)*l+1:i*l) = getnoise();
 end
-sch1 = sch1+noise_1;
+% sch1 = sch1+noise_1;
+sch1 = sch1+noise_1/2;
 % save(['D:\szh\test\used-data\test\',folder,'noise_1.mat'],'noise_1');
 clear noise_1
 save(['D:\szh\test\used-data\test\',folder,'sch1.mat'],'sch1');
 clear sch1
 
 
-load('D:\szh\test\used-data\200#constantly\200#10-04\uch2.mat');
-sch2 = conv(Alpha_test,uch2);
-clear uch2
-sch2 = sch2(1:end-length(Alpha_test)+1);
-noise_2 = zeros(l*6*24,1);
-for i = 1:6*24
-    noise_2((i-1)*l+1:i*l) = getnoise();
-end
-sch2 = sch2+noise_2;
-clear noise_2
-save(['D:\szh\test\used-data\test\',folder,'sch2.mat'],'sch2');
-clear sch2
-
-
-load('D:\szh\test\used-data\200#constantly\200#10-04\uch3.mat');
-sch3 = conv(Alpha_test,uch3);
-clear uch3
-sch3 = sch3(1:end-length(Alpha_test)+1);
-noise_3 = zeros(l*6*24,1);
-for i = 1:6*24
-    noise_3((i-1)*l+1:i*l) = getnoise();
-end
-sch3 = sch3+noise_3;
-clear noise_3
-save(['D:\szh\test\used-data\test\',folder,'sch3.mat'],'sch3');
-clear sch3
+% load('D:\szh\test\used-data\200#constantly\200#10-04\uch2.mat');
+% sch2 = conv(Alpha_test,uch2);
+% clear uch2
+% sch2 = sch2(1:end-length(Alpha_test)+1);
+% noise_2 = zeros(l*6*24,1);
+% for i = 1:6*24
+%     noise_2((i-1)*l+1:i*l) = getnoise();
+% end
+% sch2 = sch2+noise_2;
+% clear noise_2
+% save(['D:\szh\test\used-data\test\',folder,'sch2.mat'],'sch2');
+% clear sch2
+% 
+% 
+% load('D:\szh\test\used-data\200#constantly\200#10-04\uch3.mat');
+% sch3 = conv(Alpha_test,uch3);
+% clear uch3
+% sch3 = sch3(1:end-length(Alpha_test)+1);
+% noise_3 = zeros(l*6*24,1);
+% for i = 1:6*24
+%     noise_3((i-1)*l+1:i*l) = getnoise();
+% end
+% sch3 = sch3+noise_3;
+% clear noise_3
+% save(['D:\szh\test\used-data\test\',folder,'sch3.mat'],'sch3');
+% clear sch3
 
 %% ************************************
-% %人工合成数据，测试程序
-% clear all
+%人工合成数据，测试程序
+clear all
+
+% surf_folder = '10s直线传递函数\';
+% surf_folder = '15s梯形传递函数\';
+% surf_folder = '10s0-100Hz单峰传递函数\';
+% surf_folder = '10s0-15Hz双峰传递函数\';
+% surf_folder = '15s梯形传递函数0-50Hz\';
+% surf_folder = '10s0-50Hz双峰传递函数\';
+% surf_folder = '15s3#ch2传递函数\';
+% surf_folder = '10s梯形传递函数 简单相位4\';
+surf_folder = '10s双峰传递函数 简单相位5\';
+
+sf=200;
+lu=20;
+ls=20;
+lag=200;%时间延迟
+day = 4;
+t1 = 6*7+1+144*(4-1);
+t2 = 6*19+0+144*(4-1);
+
+alpha=cal_alpha(lag,surf_folder,day,t1,t2,lu,ls,'ch1');
+Alpha=ifft(alpha);
+
+
+%以下修正计算的alpha并画图
+l = (lu+ls)*sf-1;
+n=0:l-1;
+n=n';
+t=n/sf;
+f=n*sf/l;
+
+
+load(['D:\szh\test\used-data\test\',surf_folder,'Alpha_test.mat'],'Alpha_test');
+alpha_test = fft(Alpha_test);
+lA = length(Alpha_test);
+nA = 0:lA-1;
+nA = nA';
+tA = nA / sf;
+fA = nA * sf / lA;
+
+
+% Alpha_revise = zeros(lA,1);
+% if(lag == 0)
+%     Alpha_revise(1:lA) = Alpha(1:lA);
+% elseif(lag >= lA)
+%     Alpha_revise(1:lA) = Alpha(l-lag+1:l-lag+lA);
+% else
+%     Alpha_revise(1:lag) = Alpha(l-lag+1:l);
+%     Alpha_revise(lag+1:lA) = Alpha(1:lA-lag);
+% end
+% alpha_revise = fft(Alpha_revise);
 % 
-% % surf_folder = '10s直线传递函数\';
-% % surf_folder = '15s梯形传递函数\';
-% % surf_folder = '10s0-100Hz单峰传递函数\';
-% % surf_folder = '10s0-15Hz双峰传递函数\';
-% % surf_folder = '15s梯形传递函数0-50Hz\';
-% % surf_folder = '10s0-50Hz双峰传递函数\';
-% % surf_folder = '15s3#ch2传递函数\';
-% surf_folder = '10s梯形传递函数 简单相位2\';
 % 
-% sf=200;
-% lu=20;
-% ls=20;
-% lag=200;%时间延迟
-% day = 4;
-% t1 = 6*7+1+144*(4-1);
-% t2 = 6*19+0+144*(4-1);
-% 
-% alpha=cal_alpha(lag,surf_folder,day,t1,t2,lu,ls,'ch1');
-% Alpha=ifft(alpha);
-% 
-% 
-% %以下修正计算的alpha并画图
-% l = (lu+ls)*sf-1;
-% n=0:l-1;
-% n=n';
-% t=n/sf;
-% f=n*sf/l;
-% 
-% 
-% load(['D:\szh\test\used-data\test\',surf_folder,'Alpha_test.mat'],'Alpha_test');
-% alpha_test = fft(Alpha_test);
-% lA = length(Alpha_test);
-% nA = 0:lA-1;
-% nA = nA';
-% tA = nA / sf;
-% fA = nA * sf / lA;
-% 
-% 
-% % Alpha_revise = zeros(lA,1);
-% % if(lag == 0)
-% %     Alpha_revise(1:lA) = Alpha(1:lA);
-% % elseif(lag >= lA)
-% %     Alpha_revise(1:lA) = Alpha(l-lag+1:l-lag+lA);
-% % else
-% %     Alpha_revise(1:lag) = Alpha(l-lag+1:l);
-% %     Alpha_revise(lag+1:lA) = Alpha(1:lA-lag);
-% % end
-% % alpha_revise = fft(Alpha_revise);
-% % 
-% % 
-% % figure(21)
-% % plot(fA,abs(alpha_test),fA,abs(alpha_revise),'linewidth',1.3),xlim([0 100]),xlabel('f/Hz','fontsize',22),ylabel('场地传递函数幅值','fontsize',22)...
-% %     ,set(gca,'fontsize',22),legend('真实值','估计值')%,title('场地传递函数真实值与估计值对比')
-% % span = 30;
-% % alpha_revise_smoothed = smooth(abs(alpha_revise),span);
-% % figure(22)
-% % plot(fA,abs(alpha_test),fA,alpha_revise_smoothed,'linewidth',1.3),xlim([0 100]),xlabel('f/Hz','fontsize',22),ylabel('场地传递函数幅值','fontsize',22)...
-% %     ,set(gca,'fontsize',22),legend('真实值','估计值')%,title('场地传递函数真实值与估计值对比')
-% span = 30;
-% alpha_smoothed = smooth(abs(alpha),span);
-% figure(23)
-% plot(fA,abs(alpha_test),f,alpha_smoothed,'linewidth',1.3),xlim([0 100]),xlabel('f/Hz','fontsize',22),ylabel('场地传递函数幅值','fontsize',22)...
+% figure(21)
+% plot(fA,abs(alpha_test),fA,abs(alpha_revise),'linewidth',1.3),xlim([0 100]),xlabel('f/Hz','fontsize',22),ylabel('场地传递函数幅值','fontsize',22)...
 %     ,set(gca,'fontsize',22),legend('真实值','估计值')%,title('场地传递函数真实值与估计值对比')
-% % figure(25)
-% % plot(tA,Alpha_test,tA,Alpha_revise)
-% 
-% cut = 2000;
-% aaa = fftshift(Alpha);
-% Alpha_cut = aaa((l-1)/2-lag+1:(l-1)/2-lag+cut);
-% alpha_cut = fft(Alpha_cut);
-% fcut = [0:cut-1]'/cut*200;
-% figure(30)
-% plot(fA,abs(alpha_test),fcut,abs(alpha_cut),'linewidth',1.3),xlim([0 100]),xlabel('f/Hz','fontsize',22),ylabel('场地传递函数幅值','fontsize',22)...
-%     ,set(gca,'fontsize',22),legend('真实值','截断值')%,title('场地传递函数真实值与估计值对比')
 % span = 30;
-% alpha_cut_smoothed = smooth(abs(alpha_cut),span);
-% figure(31)
-% plot(fA,abs(alpha_test),fcut,alpha_cut_smoothed,'linewidth',1.3),xlim([0 100]),xlabel('f/Hz','fontsize',22),ylabel('场地传递函数幅值','fontsize',22)...
-%     ,set(gca,'fontsize',22),legend('真实值','截断平滑值')%,title('场地传递函数真实值与估计值对比')
-% temp = alpha_cut_smoothed .* (alpha_cut ./ abs(alpha_cut));
-% Alpha_final = real(ifft(temp));
-% alpha_final = fft(Alpha_final);
-% figure(32)
-% plot(fA,abs(alpha_test),fcut,alpha_cut_smoothed,'linewidth',1.3),xlim([0 100]),xlabel('f/Hz','fontsize',22),ylabel('场地传递函数幅值','fontsize',22)...
-%     ,set(gca,'fontsize',22),legend('真实值','最终估计值')%,title('场地传递函数真实值与估计值对比')
-% 
-% % figure(1)
-% % plot(fA,abs(alpha_revise))
-% % figure(2)
-% % plot(tA,Alpha_revise)
-% % figure(3)
-% % plot(fA(1:NA),abs(alpha_revise(1:NA)))
-% % figure(4)
-% % plot(t,Alpha)
-% 
-% % figure(1)
-% % plot(f,abs(alpha))
-% % figure(2)
-% % plot(t,Alpha)
-% % figure(3)
-% % plot(f(1:N),abs(alpha(1:N)))
-% 
-% % figure(11)
-% % plot(fA(1:NA),abs(alpha_test(1:NA)),f(1:N),abs(alpha(1:N)),fA(1:NA),abs(alpha_revise(1:NA)))
-% figure(12)
-% % plot(fA,abs(alpha_test),f,abs(alpha),fA,abs(alpha_revise))
-% plot(fA,abs(alpha_test),f,abs(alpha))
-% 
-% 
-% 
-% 
-% % %画误差图
-% % error_ab = abs(abs(alpha_test)-alpha_smoothed);
-% % error_re = error_ab ./ abs(alpha_test);
-% % % figure(200)
-% % % plot(fA,error_ab)
-% % figure(201)
-% % plot(fA,error_re),axis([0 100 0 0.2])
-% 
+% alpha_revise_smoothed = smooth(abs(alpha_revise),span);
+% figure(22)
+% plot(fA,abs(alpha_test),fA,alpha_revise_smoothed,'linewidth',1.3),xlim([0 100]),xlabel('f/Hz','fontsize',22),ylabel('场地传递函数幅值','fontsize',22)...
+%     ,set(gca,'fontsize',22),legend('真实值','估计值')%,title('场地传递函数真实值与估计值对比')
+span = 30;
+alpha_smoothed = smooth(abs(alpha),span);
+figure(23)
+plot(fA,abs(alpha_test),f,alpha_smoothed,'linewidth',1.3),xlim([0 100]),xlabel('f/Hz','fontsize',22),ylabel('场地传递函数幅值','fontsize',22)...
+    ,set(gca,'fontsize',22),legend('真实值','估计值')%,title('场地传递函数真实值与估计值对比')
+% figure(25)
+% plot(tA,Alpha_test,tA,Alpha_revise)
+
+cut = 2000;
+aaa = fftshift(Alpha);
+Alpha_cut = aaa((l-1)/2-lag+1:(l-1)/2-lag+cut);
+alpha_cut = fft(Alpha_cut);
+fcut = [0:cut-1]'/cut*200;
+figure(30)
+plot(fA,abs(alpha_test),fcut,abs(alpha_cut),'linewidth',1.3),xlim([0 100]),xlabel('f/Hz','fontsize',22),ylabel('场地传递函数幅值','fontsize',22)...
+    ,set(gca,'fontsize',22),legend('真实值','截断值')%,title('场地传递函数真实值与估计值对比')
+span = 30;
+alpha_cut_smoothed = smooth(abs(alpha_cut),span);
+figure(31)
+plot(fA,abs(alpha_test),fcut,alpha_cut_smoothed,'linewidth',1.3),xlim([0 100]),xlabel('f/Hz','fontsize',22),ylabel('场地传递函数幅值','fontsize',22)...
+    ,set(gca,'fontsize',22),legend('真实值','截断平滑值')%,title('场地传递函数真实值与估计值对比')
+temp = alpha_cut_smoothed .* (alpha_cut ./ abs(alpha_cut));
+Alpha_final = real(ifft(temp));
+alpha_final = fft(Alpha_final);
+figure(32)
+plot(fA,abs(alpha_test),fcut,alpha_cut_smoothed,'linewidth',1.3),xlim([0 100]),xlabel('f/Hz','fontsize',22),ylabel('场地传递函数幅值','fontsize',22)...
+    ,set(gca,'fontsize',22),legend('真实值','最终估计值')%,title('场地传递函数真实值与估计值对比')
+
+% figure(1)
+% plot(fA,abs(alpha_revise))
+% figure(2)
+% plot(tA,Alpha_revise)
+% figure(3)
+% plot(fA(1:NA),abs(alpha_revise(1:NA)))
+% figure(4)
+% plot(t,Alpha)
+
+% figure(1)
+% plot(f,abs(alpha))
+% figure(2)
+% plot(t,Alpha)
+% figure(3)
+% plot(f(1:N),abs(alpha(1:N)))
+
+% figure(11)
+% plot(fA(1:NA),abs(alpha_test(1:NA)),f(1:N),abs(alpha(1:N)),fA(1:NA),abs(alpha_revise(1:NA)))
+figure(12)
+% plot(fA,abs(alpha_test),f,abs(alpha),fA,abs(alpha_revise))
+plot(fA,abs(alpha_test),f,abs(alpha))
+
+
+
+
+% %画误差图
+% error_ab = abs(abs(alpha_test)-alpha_smoothed);
+% error_re = error_ab ./ abs(alpha_test);
+% % figure(200)
+% % plot(fA,error_ab)
+% figure(201)
+% plot(fA,error_re),axis([0 100 0 0.2])
+
 
 %% ************************************
 % %反复迭代测试人造数据
