@@ -1,53 +1,53 @@
-% clear all
-% path='D:\szh\test\used-data\高铁\HSRdata_merge\SAC_M\';
-% full_name=dir(fullfile(path,'*SAC*'));
-% [hd,ori_data_example]=load_sac([path,full_name(145).name]);
-% delta=hd.delta;
-% b_time=hd.b;
-% e_time=hd.e;
-% exact_time=hd.nzhour*3600+hd.nzmin*60+hd.nzsec+hd.nzmsec/1000;
-% % time=exact_time+b_time:delta:exact_time+e_time;
-% 
-% 
-% len=17280000;
-% t=[0:len-1]'/200;
-% 
-% start=1;
-% while(ori_data_example(start)==0)
-% start=start+1;
-% end
-% start
-% over=len;
-% while(ori_data_example(over)==0)
-% over=over-1;
-% end
-% over
-% 
-% % %for M001-M024
-% % istart=1e6;
-% % iend=4.6e6-1;
-% % u=ori_data_example(istart:iend)-sum(ori_data_example(istart:iend))/len;
-% % tt=[0:iend-istart]';
-% % p=polyfit(tt,u,1);
-% % uuu=u-(p(1)*tt+p(2));
-% % clear u
-% 
-% %for M025-M036
-% if(over-start<3.6e6)
-%     istart=start+1e5;
-%     iend=istart+4*60*60*200-1;
-% else
-%     istart=start+1e5;
-%     iend=istart+5*60*60*200-1;
-% end
+clear all
+path='D:\szh\test\used-data\高铁\HSRdata_merge\SAC_M\';
+full_name=dir(fullfile(path,'*SAC*'));
+[hd,ori_data_example]=load_sac([path,full_name(145).name]);
+delta=hd.delta;
+b_time=hd.b;
+e_time=hd.e;
+exact_time=hd.nzhour*3600+hd.nzmin*60+hd.nzsec+hd.nzmsec/1000;
+% time=exact_time+b_time:delta:exact_time+e_time;
+
+
+len=17280000;
+t=[0:len-1]'/200;
+
+start=1;
+while(ori_data_example(start)==0)
+start=start+1;
+end
+start
+over=len;
+while(ori_data_example(over)==0)
+over=over-1;
+end
+over
+
+% %for M001-M024
+% istart=1e6;
+% iend=4.6e6-1;
 % u=ori_data_example(istart:iend)-sum(ori_data_example(istart:iend))/len;
 % tt=[0:iend-istart]';
 % p=polyfit(tt,u,1);
 % uuu=u-(p(1)*tt+p(2));
 % clear u
-% 
-% % figure(1)
-% % plot(tt/200,uuu)
+
+%for M025-M036
+if(over-start<3.6e6)
+    istart=start+1e5;
+    iend=istart+4*60*60*200-1;
+else
+    istart=start+1e5;
+    iend=istart+5*60*60*200-1;
+end
+u=ori_data_example(istart:iend)-sum(ori_data_example(istart:iend))/len;
+tt=[0:iend-istart]';
+p=polyfit(tt,u,1);
+uuu=u-(p(1)*tt+p(2));
+clear u
+
+% figure(1)
+% plot(tt/200,uuu)
 % 
 % 
 % 
@@ -97,30 +97,30 @@
 
 
 %%
-%生成连续高铁信号
-file=dir('D:\szh\test\used-data\picked_data\test');
-
-test = zeros(17280000,1);
-
-count = 0;
-for i = 3:50
-    name=dir(['D:\szh\test\used-data\picked_data\test\',file(i).name]);
-    n = length(name);
-    for j = 3:n
-        load(['D:\szh\test\used-data\picked_data\test\',file(i).name,'\',name(j).name])
-        if(max(under_ch1)<=2e6)
-            under_ch1 = under_ch1 / 1e6;
-        end
-        if(max(under_ch1)>2e6)
-            under_ch1 = under_ch1 /1e7;
-        end
-        test(count*4000+1:count*4000+4000) = under_ch1;
-        clear under_ch1
-        count = count + 1;
-    end
-end
-
-temp = count *4000;
-test(temp+1:temp*2)=test(1:temp);
-xxx = 17280000 -2 *temp;
-test(2*temp+1:end) = test(1:xxx);
+% %生成连续高铁信号
+% file=dir('D:\szh\test\used-data\picked_data\test');
+% 
+% test = zeros(17280000,1);
+% 
+% count = 0;
+% for i = 3:50
+%     name=dir(['D:\szh\test\used-data\picked_data\test\',file(i).name]);
+%     n = length(name);
+%     for j = 3:n
+%         load(['D:\szh\test\used-data\picked_data\test\',file(i).name,'\',name(j).name])
+%         if(max(under_ch1)<=2e6)
+%             under_ch1 = under_ch1 / 1e6;
+%         end
+%         if(max(under_ch1)>2e6)
+%             under_ch1 = under_ch1 /1e7;
+%         end
+%         test(count*4000+1:count*4000+4000) = under_ch1;
+%         clear under_ch1
+%         count = count + 1;
+%     end
+% end
+% 
+% temp = count *4000;
+% test(temp+1:temp*2)=test(1:temp);
+% xxx = 17280000 -2 *temp;
+% test(2*temp+1:end) = test(1:xxx);

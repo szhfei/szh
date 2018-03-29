@@ -375,7 +375,7 @@
 % clear sch3
 
 %%
-t1 = 6*12 + 5 + 144*(4-1);
+t1 = 6*7 + 5 + 144*(4-1);
 % load('D:\szh\test\used-data\namelist\name_200.mat');
 % load(['D:\szh\test\used-data\200#\',name_200{t1}]);
 % A_200=zeros(120000,3);
@@ -385,15 +385,20 @@ t1 = 6*12 + 5 + 144*(4-1);
 % save(['F:\A_200\A200_1240.mat'],'A_200');
 
 % folder = '10s梯形传递函数 简单相位1\';
-folder = '10s双峰传递函数 简单相位2\';
+folder = '10s双峰传递函数 简单相位3\';
 load(['D:\szh\test\used-data\test\',folder,'sch1.mat'],'sch1');
-load(['D:\szh\test\used-data\test\',folder,'sch2.mat'],'sch2');
-load(['D:\szh\test\used-data\test\',folder,'sch3.mat'],'sch3');
-XAD=zeros(360000,1);
+% load(['D:\szh\test\used-data\test\',folder,'sch2.mat'],'sch2');
+% load(['D:\szh\test\used-data\test\',folder,'sch3.mat'],'sch3');
+XAD=zeros(360000,3);
 tt1 = t1 - 144*(4-1);
 l = 120000;
 x1 = (tt1-1)*l;
 XAD(:,1)=sch1(x1+1:x1+l*3);
-XAD(:,2)=sch2(x1+1:x1+l*3);
-XAD(:,3)=sch3(x1+1:x1+l*3);
+% XAD(:,2)=sch2(x1+1:x1+l*3);
+% XAD(:,3)=sch3(x1+1:x1+l*3);
 save(['F:\A04\A04_1200.mat'],'XAD');
+
+A_200=zeros(120000,3);
+load('D:\szh\test\used-data\test_11.mat');
+A_200(:,1)=uch1(x1+1:x1+l);
+save(['F:\A_200\A200_1220.mat'],'A_200');

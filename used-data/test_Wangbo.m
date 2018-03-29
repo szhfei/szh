@@ -86,7 +86,7 @@
 clear all
 
 
-surf_folder = '10s双峰传递函数 简单相位5\';
+surf_folder = '10s双峰传递函数 简单相位3\';
 % surf_folder = '10s梯形传递函数 简单相位1\';
 load(['D:\szh\test\used-data\test\',surf_folder,'Alpha_test.mat'],'Alpha_test');
 alpha_test = fft(Alpha_test);
@@ -101,7 +101,7 @@ load('D:\szh\test\used-data\test_11.mat');
 load(['D:\szh\test\used-data\test\',surf_folder,'sch1.mat'],'sch1');
 ll = 120000;
 t1 = 6 * 7 + 5;
-t2 = 6 * 12 + 5;
+t2 = 6 * 7 + 5;
 x1 = (t1-1)*ll;
 x2 = t2*ll;
 lag = 000;
@@ -169,7 +169,7 @@ plot(fc,alpha_wangbo,fA,abs(alpha_test)),xlim([.1 50]),ylim([0 3])
 clear all
 
 
-surf_folder = '10s双峰传递函数 简单相位5\';
+surf_folder = '10s双峰传递函数 简单相位3\';
 % surf_folder = '10s梯形传递函数 简单相位1\';
 load(['D:\szh\test\used-data\test\',surf_folder,'Alpha_test.mat'],'Alpha_test');
 alpha_test = fft(Alpha_test);
@@ -184,7 +184,7 @@ load('D:\szh\test\used-data\test_11.mat');
 load(['D:\szh\test\used-data\test\',surf_folder,'sch1.mat'],'sch1');
 ll = 120000;
 t1 = 6 * 7 + 5;
-t2 = 6 * 12 + 5;
+t2 = 6 * 7 + 5;
 x1 = (t1-1)*ll;
 x2 = t2*ll;
 lag = 100;

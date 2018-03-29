@@ -1,6 +1,6 @@
 function res = myfilter(hd,xxx)
-    res = filter(hd,xxx);
-    res = flipud(res);
-    res = filter(hd,res);
-    res = flipud(res);
+    temp = filter(hd,xxx);
+    res = flipud(temp);
+    temp = filter(hd,res);
+    res = flipud(temp);
 end
